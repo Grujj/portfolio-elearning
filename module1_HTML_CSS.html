@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 1 — Initiation au HTML & CSS</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0f1f3d;
+    --navy2: #1a2f52;
+    --blue: #2356c8;
+    --blue-light: #4a7ae8;
+    --accent: #f0a500;
+    --cream: #f8f5ef;
+    --text: #1a1a2e;
+    --muted: #5a6070;
+    --success: #1a8a4a;
+    --error: #c0392b;
+    --white: #ffffff;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--navy);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,.3);
+  }
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-brand {
+    font-family: 'DM Serif Display', serif;
+    color: var(--white);
+    font-size: 1.1rem;
+    letter-spacing: .02em;
+  }
+  .header-brand span { color: var(--accent); }
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .progress-label { color: rgba(255,255,255,.6); font-size: .78rem; font-weight: 500; }
+  .progress-bar {
+    width: 140px;
+    height: 5px;
+    background: rgba(255,255,255,.15);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width .5s ease;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 48px 32px; }
+
+  /* ── SCREENS ── */
+  .screen { display: none; animation: fadeIn .4s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── INTRO ── */
+  .intro-hero {
+    background: var(--navy);
+    border-radius: 20px;
+    padding: 56px 48px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .intro-hero::before {
+    content: '</>';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'DM Serif Display', serif;
+    font-size: 14rem;
+    color: rgba(255,255,255,.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--navy);
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .intro-hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.8rem;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .intro-hero h1 em { color: var(--accent); font-style: italic; }
+  .intro-hero p {
+    color: rgba(255,255,255,.7);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 500px;
+    font-weight: 300;
+  }
+
+  .meta-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+  }
+  .meta-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
+    color: rgba(255,255,255,.8);
+    font-size: .82rem;
+    padding: 7px 16px;
+    border-radius: 30px;
+    font-weight: 400;
+  }
+  .meta-pill svg { width: 14px; height: 14px; opacity: .7; }
+
+  .objectives {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 32px;
+    border: 1px solid rgba(0,0,0,.06);
+  }
+  .objectives h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: var(--navy);
+  }
+  .obj-list { display: flex; flex-direction: column; gap: 10px; }
+  .obj-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f0f4ff;
+    border-radius: 10px;
+    font-size: .9rem;
+    line-height: 1.5;
+  }
+  .obj-icon {
+    width: 22px;
+    height: 22px;
+    background: var(--blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: white;
+    font-size: .65rem;
+    font-weight: 700;
+  }
+
+  /* ── LESSON ── */
+  .lesson-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .lesson-num {
+    width: 48px; height: 48px;
+    background: var(--navy);
+    color: var(--accent);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .lesson-title-block h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.7rem;
+    color: var(--navy);
+    line-height: 1.2;
+  }
+  .lesson-title-block p { color: var(--muted); font-size: .88rem; margin-top: 3px; }
+
+  .content-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(0,0,0,.06);
+    line-height: 1.75;
+  }
+  .content-card p { margin-bottom: 14px; color: #2a2a3a; font-size: .95rem; }
+  .content-card p:last-child { margin-bottom: 0; }
+  .content-card strong { color: var(--navy); font-weight: 600; }
+
+  .code-block {
+    background: var(--navy);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .code-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--accent));
+  }
+  .code-lang {
+    color: rgba(255,255,255,.4);
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .code-block pre {
+    font-family: 'Courier New', monospace;
+    font-size: .85rem;
+    color: #c9d1e8;
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+  .code-block .tag { color: #79b8ff; }
+  .code-block .attr { color: #ffab70; }
+  .code-block .val { color: #9ecbff; }
+  .code-block .comment { color: #6a737d; font-style: italic; }
+  .code-block .prop { color: #b392f0; }
+  .code-block .px { color: #85e89d; }
+
+  .highlight-box {
+    border-left: 4px solid var(--blue);
+    background: #f0f4ff;
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: .9rem;
+    color: var(--navy2);
+    line-height: 1.6;
+  }
+  .highlight-box strong { display: block; margin-bottom: 4px; color: var(--blue); font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; }
+
+  /* ── QUIZ ── */
+  .quiz-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    border: 1px solid rgba(0,0,0,.06);
+  }
+  .quiz-q-label {
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: 10px;
+  }
+  .quiz-question {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--navy);
+    line-height: 1.3;
+    margin-bottom: 28px;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-option {
+    padding: 14px 20px;
+    border: 2px solid #e0e5f0;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: .92rem;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    text-align: left;
+    width: 100%;
+    color: var(--text);
+  }
+  .quiz-option:hover { border-color: var(--blue-light); background: #f0f4ff; }
+  .quiz-option.correct { border-color: var(--success); background: #f0faf4; color: var(--success); }
+  .quiz-option.wrong { border-color: var(--error); background: #fff5f5; color: var(--error); }
+  .quiz-option .opt-letter {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #e0e5f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: .78rem;
+    flex-shrink: 0;
+    transition: all .2s;
+  }
+  .quiz-option.correct .opt-letter { background: var(--success); color: white; }
+  .quiz-option.wrong .opt-letter { background: var(--error); color: white; }
+
+  .quiz-feedback {
+    margin-top: 20px;
+    padding: 16px 20px;
+    border-radius: 10px;
+    font-size: .9rem;
+    line-height: 1.6;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; animation: fadeIn .3s ease; }
+  .quiz-feedback.ok { background: #f0faf4; border: 1px solid #a8dbb8; color: var(--success); }
+  .quiz-feedback.ko { background: #fff5f5; border: 1px solid #f0b8b0; color: var(--error); }
+  .quiz-feedback strong { display: block; margin-bottom: 4px; }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background: white;
+    color: var(--muted);
+    font-size: .84rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-color: #e0e5f0;
+    transition: all .2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .tab-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn .3s ease; }
+
+  /* ── NAV ── */
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e8eaf0;
+  }
+  .btn {
+    padding: 13px 28px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: .92rem;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    transition: all .2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary { background: var(--blue); color: white; }
+  .btn-primary:hover { background: var(--navy); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(35,86,200,.3); }
+  .btn-outline { background: white; color: var(--navy); border: 2px solid #d0d5e8; }
+  .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+  .btn-accent { background: var(--accent); color: var(--navy); }
+  .btn-accent:hover { filter: brightness(1.05); transform: translateY(-1px); }
+
+  /* ── COMPLETION ── */
+  .completion {
+    text-align: center;
+    padding: 60px 32px;
+    background: white;
+    border-radius: 20px;
+    border: 1px solid rgba(0,0,0,.06);
+  }
+  .completion-icon {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, var(--blue), var(--navy));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 2.2rem;
+  }
+  .completion h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+  .completion p { color: var(--muted); font-size: 1rem; max-width: 400px; margin: 0 auto 32px; line-height: 1.6; }
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--navy);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 32px;
+  }
+  .score-badge span { color: var(--accent); font-family: 'DM Serif Display', serif; font-size: 1.5rem; }
+
+  .steps-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .step-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #d0d5e8;
+    transition: all .3s;
+  }
+  .step-dot.done { background: var(--accent); }
+  .step-dot.current { background: var(--blue); width: 24px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="header-brand">e<span>·</span>learn <span style="color:rgba(255,255,255,.3);margin:0 6px;">|</span> <span style="color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:400;">HTML & CSS</span></div>
+    <div class="progress-wrap">
+      <span class="progress-label" id="prog-label">0 / 4</span>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- SCREEN 0 : INTRO -->
+  <div class="screen active" id="s0">
+    <div class="intro-hero">
+      <div class="badge">Module 1 — Débutant</div>
+      <h1>Initiation au<br><em>HTML & CSS</em></h1>
+      <p>Découvrez les fondements du langage du web : structurer une page avec HTML, la mettre en forme avec CSS, et comprendre comment un navigateur interprète votre code.</p>
+      <div class="meta-row">
+        <div class="meta-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          20 minutes
+        </div>
+        <div class="meta-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          3 leçons + quiz
+        </div>
+        <div class="meta-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Aucun prérequis
+        </div>
+      </div>
+    </div>
+    <div class="objectives">
+      <h3>À l'issue de ce module, vous serez capable de…</h3>
+      <div class="obj-list">
+        <div class="obj-item"><div class="obj-icon">1</div>Comprendre la structure d'un document HTML et le rôle des balises principales</div>
+        <div class="obj-item"><div class="obj-icon">2</div>Écrire des règles CSS pour styliser une page (couleurs, typographie, mise en page)</div>
+        <div class="obj-item"><div class="obj-icon">3</div>Distinguer la structure (HTML) de la présentation (CSS) — le principe de séparation des concerns</div>
+      </div>
+    </div>
+    <div class="steps-indicator" id="steps"></div>
+    <div class="nav-row" style="border:none;padding-top:0;margin-top:24px;">
+      <div></div>
+      <button class="btn btn-primary" onclick="goTo(1)">Commencer le module →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 1 : HTML -->
+  <div class="screen" id="s1">
+    <div class="lesson-header">
+      <div class="lesson-num">1</div>
+      <div class="lesson-title-block">
+        <h2>La structure HTML</h2>
+        <p>Leçon 1 sur 3 — Fondamentaux</p>
+      </div>
+    </div>
+    <div class="content-card">
+      <p>HTML (<strong>HyperText Markup Language</strong>) est le langage de balisage utilisé pour structurer le contenu d'une page web. Il ne s'agit pas d'un langage de programmation, mais d'un langage de <strong>description sémantique</strong> : il indique au navigateur ce qu'est chaque élément, pas comment il doit s'afficher.</p>
+      <div class="code-block">
+        <div class="code-lang">HTML — Structure de base</div>
+        <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="val">"fr"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;head&gt;</span>
+    <span class="comment">&lt;!-- Métadonnées invisibles pour l'utilisateur --&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Ma première page<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;body&gt;</span>
+    <span class="comment">&lt;!-- Contenu visible par l'utilisateur --&gt;</span>
+    <span class="tag">&lt;h1&gt;</span>Bonjour, monde !<span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;p&gt;</span>Ceci est un paragraphe.<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+      </div>
+      <div class="highlight-box">
+        <strong>À retenir</strong>
+        Chaque élément HTML est composé d'une balise ouvrante <code>&lt;tag&gt;</code>, d'un contenu, et d'une balise fermante <code>&lt;/tag&gt;</code>. Certaines balises sont auto-fermantes (<code>&lt;meta&gt;</code>, <code>&lt;img&gt;</code>).
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'t-struct')">Structure</button>
+      <button class="tab-btn" onclick="switchTab(this,'t-sem')">Sémantique</button>
+      <button class="tab-btn" onclick="switchTab(this,'t-attr')">Attributs</button>
+    </div>
+    <div class="tab-content active" id="t-struct">
+      <div class="content-card">
+        <p>Un document HTML suit une hiérarchie stricte :</p>
+        <p>Le <strong>&lt;head&gt;</strong> contient les informations invisibles (titre, encodage, liens vers CSS). Le <strong>&lt;body&gt;</strong> contient tout le contenu affiché à l'écran. Les balises de titre vont de <strong>&lt;h1&gt;</strong> (titre principal, unique par page) à <strong>&lt;h6&gt;</strong>.</p>
+      </div>
+    </div>
+    <div class="tab-content" id="t-sem">
+      <div class="content-card">
+        <p>HTML5 a introduit des balises sémantiques qui décrivent le <em>rôle</em> du contenu :</p>
+        <div class="code-block">
+          <div class="code-lang">HTML5 — Balises sémantiques</div>
+          <pre><span class="tag">&lt;header&gt;</span>  <span class="comment">← En-tête de page</span>
+<span class="tag">&lt;nav&gt;</span>     <span class="comment">← Navigation principale</span>
+<span class="tag">&lt;main&gt;</span>    <span class="comment">← Contenu principal (unique)</span>
+<span class="tag">&lt;article&gt;</span> <span class="comment">← Contenu autonome</span>
+<span class="tag">&lt;section&gt;</span> <span class="comment">← Section thématique</span>
+<span class="tag">&lt;footer&gt;</span>  <span class="comment">← Pied de page</span></pre>
+        </div>
+        <p>Ces balises améliorent l'accessibilité (lecteurs d'écran) et le référencement naturel.</p>
+      </div>
+    </div>
+    <div class="tab-content" id="t-attr">
+      <div class="content-card">
+        <p>Les attributs enrichissent les balises d'informations supplémentaires. Ils s'écrivent dans la balise ouvrante :</p>
+        <div class="code-block">
+          <div class="code-lang">Attributs courants</div>
+          <pre><span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"https://exemple.fr"</span><span class="tag">&gt;</span>Lien<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"photo.jpg"</span> <span class="attr">alt</span>=<span class="val">"Description"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"carte"</span> <span class="attr">id</span>=<span class="val">"hero"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/div&gt;</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-outline" onclick="goTo(0)">← Retour</button>
+      <button class="btn btn-primary" onclick="goTo(2)">Leçon suivante →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 2 : CSS -->
+  <div class="screen" id="s2">
+    <div class="lesson-header">
+      <div class="lesson-num">2</div>
+      <div class="lesson-title-block">
+        <h2>Mettre en forme avec CSS</h2>
+        <p>Leçon 2 sur 3 — Stylisation</p>
+      </div>
+    </div>
+    <div class="content-card">
+      <p>CSS (<strong>Cascading Style Sheets</strong>) est le langage qui contrôle l'apparence visuelle d'un document HTML. Il fonctionne par <strong>règles</strong> : on cible un ou plusieurs éléments HTML (via un <em>sélecteur</em>), puis on leur applique des <em>déclarations</em> de style.</p>
+      <div class="code-block">
+        <div class="code-lang">CSS — Syntaxe d'une règle</div>
+        <pre><span class="comment">/* Sélecteur { propriété: valeur; } */</span>
+
+<span class="tag">h1</span> {
+  <span class="prop">font-size</span>: <span class="px">2rem</span>;
+  <span class="prop">color</span>: <span class="val">#1a2f52</span>;
+  <span class="prop">font-weight</span>: <span class="px">700</span>;
+}
+
+<span class="tag">.carte</span> {                  <span class="comment">/* classe */</span>
+  <span class="prop">background</span>: <span class="val">white</span>;
+  <span class="prop">border-radius</span>: <span class="px">12px</span>;
+  <span class="prop">padding</span>: <span class="px">24px</span>;
+  <span class="prop">box-shadow</span>: <span class="px">0 4px 20px</span> <span class="val">rgba(0,0,0,.1)</span>;
+}</pre>
+      </div>
+      <div class="highlight-box">
+        <strong>Le principe de cascade</strong>
+        Plusieurs règles peuvent s'appliquer au même élément. CSS les résout selon la <em>spécificité</em> du sélecteur : un <code>id</code> l'emporte sur une <code>class</code>, qui l'emporte sur une balise.
+      </div>
+    </div>
+    <div class="content-card">
+      <p>Les trois façons de lier du CSS à votre HTML :</p>
+      <div class="code-block">
+        <div class="code-lang">Intégration CSS</div>
+        <pre><span class="comment">&lt;!-- 1. Feuille de style externe (recommandé) --&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"style.css"</span><span class="tag">&gt;</span>
+
+<span class="comment">&lt;!-- 2. Style inline (à éviter sauf exception) --&gt;</span>
+<span class="tag">&lt;p</span> <span class="attr">style</span>=<span class="val">"color: red;"</span><span class="tag">&gt;</span>Texte rouge<span class="tag">&lt;/p&gt;</span>
+
+<span class="comment">&lt;!-- 3. Balise &lt;style&gt; dans le &lt;head&gt; --&gt;</span>
+<span class="tag">&lt;style&gt;</span>
+  <span class="tag">p</span> { <span class="prop">color</span>: <span class="val">blue</span>; }
+<span class="tag">&lt;/style&gt;</span></pre>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn btn-outline" onclick="goTo(1)">← Retour</button>
+      <button class="btn btn-primary" onclick="goTo(3)">Passer au quiz →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3 : QUIZ -->
+  <div class="screen" id="s3">
+    <div class="lesson-header">
+      <div class="lesson-num">?</div>
+      <div class="lesson-title-block">
+        <h2>Quiz de validation</h2>
+        <p>3 questions pour vérifier vos acquis</p>
+      </div>
+    </div>
+    <div id="quiz-area"></div>
+    <div class="nav-row">
+      <button class="btn btn-outline" onclick="goTo(2)">← Retour</button>
+      <button class="btn btn-accent" id="quiz-next-btn" onclick="nextQuestion()" style="display:none">Question suivante →</button>
+      <button class="btn btn-primary" id="quiz-finish-btn" onclick="goTo(4)" style="display:none">Voir mes résultats →</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 4 : COMPLETION -->
+  <div class="screen" id="s4">
+    <div class="completion">
+      <div class="completion-icon">🎓</div>
+      <h2>Module complété !</h2>
+      <div class="score-badge">Score final : <span id="final-score">—</span> / 3</div>
+      <p>Vous maîtrisez maintenant les fondamentaux du HTML et du CSS. Prochaine étape : mettre en pratique avec votre premier mini-projet.</p>
+      <button class="btn btn-primary" onclick="restart()" style="margin-top:8px;">↺ Recommencer</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const TOTAL = 4;
+let currentScreen = 0;
+let score = 0;
+
+const quizData = [
+  {
+    q: "Quelle balise HTML est utilisée pour créer le titre principal d'une page, visible dans l'onglet du navigateur ?",
+    opts: ["<h1>", "<title>", "<header>", "<main>"],
+    correct: 1,
+    feedback: { ok: "Exact ! La balise <title> est placée dans le <head> et définit le titre affiché dans l'onglet. <h1>, lui, est le titre visible dans le contenu de la page.", ko: "La balise <title>, placée dans le <head>, définit le texte affiché dans l'onglet du navigateur. Ne pas confondre avec <h1> qui est le titre visible dans la page." }
+  },
+  {
+    q: "En CSS, comment sélectionne-t-on tous les éléments ayant la classe « carte » ?",
+    opts: ["#carte { }", ".carte { }", "carte { }", "*carte { }"],
+    correct: 1,
+    feedback: { ok: "Correct ! Le point (.) précède toujours le nom d'une classe en CSS. Le dièse (#) est réservé aux identifiants.", ko: "En CSS, les classes sont ciblées avec un point : .carte { }. Le dièse (#) cible les identifiants (id), et le nom seul cible les balises HTML." }
+  },
+  {
+    q: "Lequel de ces éléments HTML est considéré comme sémantique (introduit en HTML5) ?",
+    opts: ["<div>", "<span>", "<article>", "<b>"],
+    correct: 2,
+    feedback: { ok: "Parfait ! <article> est une balise sémantique HTML5 qui indique un contenu autonome. <div> et <span> sont des conteneurs génériques sans signification.", ko: "<article> est la réponse correcte. C'est une balise sémantique HTML5 qui indique un bloc de contenu autonome. <div> et <span> ne portent aucune signification sémantique." }
+  }
+];
+
+let qIndex = 0;
+let answered = false;
+
+function goTo(n) {
+  document.getElementById('s' + currentScreen).classList.remove('active');
+  currentScreen = n;
+  document.getElementById('s' + n).classList.add('active');
+  updateProgress();
+  if (n === 3) renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress() {
+  const fill = Math.round((currentScreen / (TOTAL)) * 100);
+  document.getElementById('prog-fill').style.width = fill + '%';
+  document.getElementById('prog-label').textContent = currentScreen + ' / ' + TOTAL;
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = quizData[qIndex];
+  document.getElementById('quiz-next-btn').style.display = 'none';
+  document.getElementById('quiz-finish-btn').style.display = 'none';
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="quiz-card">
+      <div class="quiz-q-label">Question ${qIndex + 1} / ${quizData.length}</div>
+      <div class="quiz-question">${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((o, i) => `<button class="quiz-option" onclick="answer(${i})" id="opt-${i}">
+          <span class="opt-letter">${String.fromCharCode(65+i)}</span>${o}
+        </button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="fb"></div>
+    </div>`;
+}
+
+function answer(i) {
+  if (answered) return;
+  answered = true;
+  const q = quizData[qIndex];
+  const isOk = i === q.correct;
+  if (isOk) score++;
+  document.querySelectorAll('.quiz-option').forEach((el, idx) => {
+    el.disabled = true;
+    if (idx === q.correct) el.classList.add('correct');
+    else if (idx === i && !isOk) el.classList.add('wrong');
+  });
+  const fb = document.getElementById('fb');
+  fb.className = 'quiz-feedback show ' + (isOk ? 'ok' : 'ko');
+  fb.innerHTML = `<strong>${isOk ? '✓ Bonne réponse !' : '✗ Pas tout à fait…'}</strong>${isOk ? q.feedback.ok : q.feedback.ko}`;
+  if (qIndex < quizData.length - 1) document.getElementById('quiz-next-btn').style.display = 'inline-flex';
+  else { document.getElementById('quiz-finish-btn').style.display = 'inline-flex'; }
+}
+
+function nextQuestion() {
+  qIndex++;
+  renderQuestion();
+}
+
+function switchTab(btn, id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+function restart() {
+  score = 0; qIndex = 0; currentScreen = 0;
+  goTo(0);
+  document.getElementById('s4').classList.remove('active');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateProgress();
+  document.getElementById('s4').querySelector('#final-score') && (document.getElementById('final-score').textContent = score);
+});
+
+const origGoTo = goTo;
+window.goTo = function(n) {
+  if (n === 4) document.getElementById('final-score').textContent = score;
+  origGoTo(n);
+};
+</script>
+</body>
+</html>

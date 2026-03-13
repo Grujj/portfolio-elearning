@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Julien Grenier — Intégrateur e-learning</title>
+  <meta name="description" content="Portfolio e-learning de Julien Grenier — Intégrateur Articulate Rise 360, modules HTML5 interactifs, export SCORM. Disponible en full remote.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0F1F3D;
+      --navyL:   #1A2F52;
+      --blue:    #2356C8;
+      --blueL:   #E6F1FB;
+      --blueM:   #B5D4F4;
+      --accent:  #E8A020;
+      --accentL: #FDF0D5;
+      --vert:    #1A6B3A;
+      --vertL:   #EAF3DE;
+      --vertM:   #C0DD97;
+      --amber:   #FAEEDA;
+      --amberM:  #FAC775;
+      --gris:    #F4F5F8;
+      --grisM:   #E2E4EA;
+      --text:    #1A1C2E;
+      --textM:   #6B7280;
+      --white:   #FFFFFF;
+      --radius:  12px;
+      --radiusS: 8px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--gris);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--navy);
+      padding: 4rem 2rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(35,86,200,0.15);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -50px; left: 35%;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(232,160,32,0.10);
+      pointer-events: none;
+    }
+
+    .hero-inner { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(232,160,32,0.18);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.08;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero-sub {
+      color: rgba(255,255,255,0.58);
+      font-size: 15px;
+      max-width: 560px;
+      margin-bottom: 1.8rem;
+      line-height: 1.65;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      background: rgba(255,255,255,0.07);
+      border: 0.5px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      padding: 5px 13px;
+      border-radius: 20px;
+    }
+
+    /* ── STATS ── */
+    .stats {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 2rem 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .stat {
+      background: var(--white);
+      border: 0.5px solid var(--grisM);
+      border-radius: var(--radiusS);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .stat-num em { color: var(--accent); font-style: normal; }
+    .stat-label { font-size: 11px; color: var(--textM); margin-top: 2px; }
+
+    /* ── SECTIONS ── */
+    .section {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 2rem 0;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--textM);
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 0.5px solid var(--grisM);
+    }
+
+    /* ── GRID ── */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border: 0.5px solid var(--grisM);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover { border-color: #B5D4F4; transform: translateY(-2px); }
+
+    .card-thumb {
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .card-thumb.blue  { background: var(--blueL); }
+    .card-thumb.green { background: var(--vertL); }
+    .card-thumb.amber { background: var(--amber); }
+    .card-thumb.navy  { background: #E8ECF5; }
+    .card-thumb.ghost { background: var(--gris); border-bottom: 0.5px dashed var(--grisM); }
+
+    .thumb-icon {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+    }
+
+    .blue  .thumb-icon { background: var(--blueM); }
+    .green .thumb-icon { background: var(--vertM); }
+    .amber .thumb-icon { background: var(--amberM); }
+    .navy  .thumb-icon { background: #C4CEEA; }
+
+    .tech-tag {
+      position: absolute;
+      top: 10px; right: 10px;
+      font-size: 10px;
+      font-weight: 500;
+      padding: 3px 9px;
+      border-radius: 10px;
+    }
+
+    .tag-html { background: var(--amberM); color: #633806; }
+    .tag-rise { background: var(--blueM);  color: #042C53; }
+    .tag-soon { background: var(--grisM);  color: var(--textM); }
+
+    .card-body { padding: 1rem 1.1rem 1.1rem; flex: 1; display: flex; flex-direction: column; }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 5px;
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 12px;
+      color: var(--textM);
+      line-height: 1.55;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+
+    .card-footer { display: flex; align-items: center; justify-content: space-between; }
+
+    .card-meta { font-size: 11px; color: var(--textM); }
+
+    .btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.15s;
+    }
+
+    .btn-primary { background: var(--blueL); color: var(--blue); }
+    .btn-primary:hover { background: var(--blueM); }
+    .btn-ghost { background: var(--gris); color: var(--textM); cursor: default; }
+
+    /* ── GHOST CARD ── */
+    .ghost-plus {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1.5px dashed var(--grisM);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      color: var(--textM);
+      margin-bottom: 6px;
+    }
+
+    .ghost-label { font-size: 11px; color: var(--textM); font-weight: 500; }
+
+    /* ── CONTACT BAR ── */
+    .contact-bar {
+      max-width: 800px;
+      margin: 2rem auto 3rem;
+      padding: 0 2rem;
+    }
+
+    .contact-inner {
+      background: var(--navy);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .contact-text p:first-child {
+      font-size: 15px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .contact-text p:last-child {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 3px;
+    }
+
+    .btn-cta {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--accent);
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 9px 22px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+
+    .btn-cta:hover { opacity: 0.88; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 11px;
+      color: var(--textM);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 520px) {
+      .hero { padding: 2.5rem 1.25rem 2rem; }
+      .stats, .section { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .stats { grid-template-columns: repeat(3,1fr); gap: 8px; }
+      .contact-bar { padding: 0 1.25rem; }
+      .contact-inner { flex-direction: column; text-align: center; }
+    }
+
+    /* ── ANIMATION ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-inner  { animation: fadeUp 0.5s ease both; }
+    .stats       { animation: fadeUp 0.5s 0.1s ease both; }
+    .section     { animation: fadeUp 0.5s 0.2s ease both; }
+    .contact-bar { animation: fadeUp 0.5s 0.3s ease both; }
+  </style>
+</head>
+<body>
+
+  <!-- ── HERO ── -->
+  <header class="hero">
+    <div class="hero-inner">
+      <span class="hero-tag">Portfolio e-learning</span>
+      <h1>Julien Grenier<br><span>Intégrateur e-learning</span></h1>
+      <p class="hero-sub">Développeur web & intégrateur Articulate Rise 360. Je transforme vos contenus pédagogiques en modules interactifs prêts à déployer sur votre LMS.</p>
+      <div class="hero-badges">
+        <span class="badge">Articulate Rise 360</span>
+        <span class="badge">HTML5 / CSS / JS</span>
+        <span class="badge">SCORM 1.2</span>
+        <span class="badge">L3 FORSE — ingénierie pédagogique</span>
+        <span class="badge">100 % télétravail</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── STATS ── -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-num">3<em>+</em></div>
+      <div class="stat-label">Modules réalisés</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">2</div>
+      <div class="stat-label">Formats livrables</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><em>∞</em></div>
+      <div class="stat-label">Disponibilité</div>
+    </div>
+  </div>
+
+  <!-- ── MODULES HTML ── -->
+  <section class="section" style="margin-top:1.5rem;">
+    <div class="section-label">Modules HTML5 interactifs</div>
+    <div class="grid">
+
+      <!-- Module 1 — HTML CSS -->
+      <div class="card">
+        <div class="card-thumb blue">
+          <div class="thumb-icon">🎨</div>
+          <span class="tech-tag tag-html">HTML5</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">Fondamentaux HTML & CSS</div>
+          <div class="card-desc">Introduction aux bases du développement web. Navigation multi-écrans, quiz interactif.</div>
+          <div class="card-footer">
+            <span class="card-meta">4 écrans · Quiz 3 questions</span>
+            <!--
+              INSTRUCTION : remplace le href ci-dessous par l'URL de ton module HTML CSS
+              Exemple : href="https://grujj.github.io/portfolio-elearning/module1_HTML_CSS.html"
+            -->
+            <a href="MODULE_HTML_CSS_URL_ICI" target="_blank" class="btn btn-primary">Voir →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 2 — Accessibilité -->
+      <div class="card">
+        <div class="card-thumb green">
+          <div class="thumb-icon">♿</div>
+          <span class="tech-tag tag-html">HTML5</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">Accessibilité web — WCAG</div>
+          <div class="card-desc">Principes POUR, conformité WCAG 2.1. Dark mode, contrastes, navigation clavier.</div>
+          <div class="card-footer">
+            <span class="card-meta">4 écrans · Quiz 3 questions</span>
+            <!--
+              INSTRUCTION : remplace le href ci-dessous par l'URL de ton module Accessibilité
+              Exemple : href="https://grujj.github.io/portfolio-elearning/module2_Accessibilite.html"
+            -->
+            <a href="MODULE_ACCESSIBILITE_URL_ICI" target="_blank" class="btn btn-primary">Voir →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 3 — RGPD -->
+      <div class="card">
+        <div class="card-thumb amber">
+          <div class="thumb-icon">🔒</div>
+          <span class="tech-tag tag-html">HTML5</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">RGPD — Droits & obligations</div>
+          <div class="card-desc">Droits utilisateurs, bases légales, obligations RGPD. Style ludique, quiz validant.</div>
+          <div class="card-footer">
+            <span class="card-meta">4 écrans · Quiz 3 questions</span>
+            <!--
+              INSTRUCTION : remplace le href ci-dessous par l'URL de ton module RGPD
+              Exemple : href="https://grujj.github.io/portfolio-elearning/module3_RGPD.html"
+            -->
+            <a href="MODULE_RGPD_URL_ICI" target="_blank" class="btn btn-primary">Voir →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── MODULE RISE ── -->
+  <section class="section" style="margin-top:1.5rem;">
+    <div class="section-label">Module Articulate Rise 360</div>
+    <div class="grid">
+
+      <!-- Module Rise — Sécurité incendie -->
+      <div class="card">
+        <div class="card-thumb navy">
+          <div class="thumb-icon">🔥</div>
+          <span class="tech-tag tag-rise">Rise 360</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">Sécurité incendie en entreprise</div>
+          <div class="card-desc">Module réglementaire complet. Blocs interactifs, scénario d'évacuation, quiz avec feedbacks pédagogiques. Export SCORM disponible.</div>
+          <div class="card-footer">
+            <span class="card-meta">3 leçons · Quiz 5 questions</span>
+            <!--
+              INSTRUCTION : quand ton module Rise sera en ligne, remplace le btn-ghost par :
+              <a href="https://rise.articulate.com/share/XXXXXX" target="_blank" class="btn btn-primary">Voir →</a>
+              En attendant, tu peux laisser le bouton désactivé ci-dessous.
+            -->
+            <span class="btn btn-ghost">En cours</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tuile "Votre thématique" -->
+      <div class="card">
+        <div class="card-thumb ghost">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <div class="ghost-plus">+</div>
+            <span class="ghost-label">Votre thématique</span>
+          </div>
+          <span class="tech-tag tag-soon">Sur devis</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title" style="color:var(--textM);">Module sur mesure</div>
+          <div class="card-desc">Vous avez un contenu à digitaliser ? Je produis un module Rise 360 ou HTML5 à partir de vos supports existants.</div>
+          <div class="card-footer">
+            <span class="card-meta">Devis sous 24h</span>
+            <a href="mailto:grenier.julien5@gmail.com?subject=Demande de devis module e-learning" class="btn btn-primary">Me contacter →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── CONTACT BAR ── -->
+  <div class="contact-bar">
+    <div class="contact-inner">
+      <div class="contact-text">
+        <p>Disponible pour missions freelance — full remote</p>
+        <p>TJM : 250–300 € · Rise 360 · SCORM · Moodle · La Rochelle</p>
+      </div>
+      <a href="mailto:grenier.julien5@gmail.com?subject=Mission e-learning — prise de contact" class="btn-cta">Discutons de votre projet →</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>Julien Grenier · Intégrateur e-learning · grenier.julien5@gmail.com · © 2026</p>
+  </footer>
+
+</body>
+</html>

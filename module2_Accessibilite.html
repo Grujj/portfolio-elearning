@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 2 — Accessibilité Web</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Syne+Mono&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0c10;
+  --surface: #111318;
+  --surface2: #181b22;
+  --border: #252830;
+  --green: #00e896;
+  --green-dim: rgba(0,232,150,.12);
+  --yellow: #ffd600;
+  --red: #ff4d6d;
+  --blue: #4dabf7;
+  --text: #e8ecf4;
+  --muted: #7a8099;
+  --white: #ffffff;
+}
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* HEADER */
+.hdr {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.hdr-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: .04em;
+}
+.hdr-logo .dot { color: var(--green); }
+.progress-track {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.step-pip {
+  width: 28px; height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  transition: background .4s;
+}
+.step-pip.done { background: var(--green); }
+.step-pip.current { background: var(--yellow); }
+
+.wrap { max-width: 860px; margin: 0 auto; padding: 48px 32px; }
+
+/* SCREENS */
+.screen { display: none; animation: up .4s ease; }
+.screen.active { display: block; }
+@keyframes up { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── INTRO ── */
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--green);
+  color: var(--green);
+  font-family: 'Syne Mono', monospace;
+  font-size: .72rem;
+  padding: 4px 12px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+  letter-spacing: .06em;
+}
+.tag-chip::before { content: '//'; opacity: .5; }
+
+.intro-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 20px;
+  letter-spacing: -.02em;
+}
+.intro-title .hl { color: var(--green); }
+
+.intro-sub {
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 560px;
+  font-weight: 300;
+  margin-bottom: 36px;
+}
+
+.stat-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.stat-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  min-width: 160px;
+}
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--green);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-label { font-size: .78rem; color: var(--muted); font-weight: 400; }
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin-bottom: 36px;
+}
+.why-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.why-icon { font-size: 1.6rem; margin-bottom: 10px; }
+.why-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .95rem;
+  margin-bottom: 6px;
+  color: var(--white);
+}
+.why-desc { font-size: .82rem; color: var(--muted); line-height: 1.5; }
+
+/* ── LESSON CARDS ── */
+.section-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: .72rem;
+  color: var(--green);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.lesson-h {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: -.01em;
+}
+.lesson-sub { color: var(--muted); font-size: .9rem; margin-bottom: 28px; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  margin-bottom: 16px;
+  line-height: 1.75;
+}
+.panel p { margin-bottom: 12px; color: #c8cfe0; font-size: .93rem; }
+.panel p:last-child { margin-bottom: 0; }
+.panel strong { color: var(--white); font-weight: 600; }
+
+.terminal {
+  background: #060809;
+  border: 1px solid #1e2530;
+  border-radius: 10px;
+  padding: 22px 24px;
+  margin: 16px 0;
+  font-family: 'Syne Mono', monospace;
+  font-size: .82rem;
+  line-height: 1.8;
+  position: relative;
+}
+.terminal::before {
+  content: '● ● ●';
+  display: block;
+  font-size: .6rem;
+  color: var(--border);
+  margin-bottom: 14px;
+  letter-spacing: .3em;
+}
+.t-tag { color: #88d4ff; }
+.t-attr { color: #ffa08a; }
+.t-val { color: #98c379; }
+.t-comment { color: #4a5568; font-style: italic; }
+.t-good { color: var(--green); }
+.t-bad { color: var(--red); }
+
+.alert {
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: .88rem;
+  line-height: 1.6;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.alert-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.alert.info { background: rgba(77,171,247,.1); border: 1px solid rgba(77,171,247,.25); color: #c0dcf5; }
+.alert.warn { background: rgba(255,214,0,.08); border: 1px solid rgba(255,214,0,.2); color: #e8d48a; }
+.alert.good { background: var(--green-dim); border: 1px solid rgba(0,232,150,.25); color: #8ae8c4; }
+
+/* ── CRITERIA GRID ── */
+.criteria-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+.criteria-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  background: var(--surface2);
+}
+.criteria-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  color: var(--green);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.criteria-name {
+  font-weight: 600;
+  font-size: .9rem;
+  margin-bottom: 4px;
+  color: var(--white);
+}
+.criteria-desc { font-size: .78rem; color: var(--muted); line-height: 1.5; }
+
+/* ── QUIZ ── */
+.q-counter {
+  font-family: 'Syne Mono', monospace;
+  font-size: .78rem;
+  color: var(--green);
+  margin-bottom: 8px;
+  letter-spacing: .1em;
+}
+.q-text {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 24px;
+  color: var(--white);
+}
+.q-opts { display: flex; flex-direction: column; gap: 8px; }
+.q-opt {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  cursor: pointer;
+  font-size: .9rem;
+  color: var(--text);
+  text-align: left;
+  width: 100%;
+  font-family: 'Source Sans 3', sans-serif;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.q-opt:hover { border-color: var(--green); color: var(--white); }
+.q-opt.ok { border-color: var(--green); background: var(--green-dim); color: var(--green); }
+.q-opt.ko { border-color: var(--red); background: rgba(255,77,109,.08); color: var(--red); }
+.q-letter {
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  background: var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne Mono', monospace;
+  font-size: .72rem;
+  flex-shrink: 0;
+  transition: all .2s;
+}
+.q-opt.ok .q-letter { background: var(--green); color: #000; }
+.q-opt.ko .q-letter { background: var(--red); color: #fff; }
+
+.q-fb {
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: .88rem;
+  line-height: 1.6;
+  display: none;
+}
+.q-fb.show { display: block; animation: up .3s ease; }
+.q-fb.ok { background: var(--green-dim); border: 1px solid rgba(0,232,150,.2); color: #8ae8c4; }
+.q-fb.ko { background: rgba(255,77,109,.08); border: 1px solid rgba(255,77,109,.2); color: #f5a0b0; }
+.q-fb strong { display: block; margin-bottom: 4px; font-family: 'Syne', sans-serif; }
+
+/* ── COMPLETION ── */
+.done-wrap {
+  text-align: center;
+  padding: 56px 32px;
+}
+.done-score {
+  display: inline-block;
+  font-family: 'Syne', sans-serif;
+  font-size: 6rem;
+  font-weight: 800;
+  color: var(--green);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.done-denom { font-family: 'Syne', sans-serif; font-size: 2rem; color: var(--muted); }
+.done-title { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 700; margin: 20px 0 12px; }
+.done-sub { color: var(--muted); font-size: .95rem; max-width: 440px; margin: 0 auto 32px; line-height: 1.6; }
+
+/* ── NAV ── */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .88rem;
+  letter-spacing: .02em;
+  transition: all .2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-g { background: var(--green); color: #000; }
+.btn-g:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn-o { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.btn-o:hover { color: var(--text); border-color: var(--muted); }
+.btn-y { background: var(--yellow); color: #000; }
+.btn-y:hover { filter: brightness(1.05); }
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-logo">access<span class="dot">.</span>learn</div>
+  <div class="progress-track" id="pips"></div>
+</header>
+
+<div class="wrap">
+
+  <!-- S0 INTRO -->
+  <div class="screen active" id="s0">
+    <div class="tag-chip">module_02 — intermédiaire</div>
+    <h1 class="intro-title">Accessibilité<br><span class="hl">Web</span></h1>
+    <p class="intro-sub">Le web est fait pour tout le monde. Découvrez pourquoi l'accessibilité est une obligation légale, une nécessité éthique — et un avantage concurrentiel pour vos projets.</p>
+
+    <div class="stat-row">
+      <div class="stat-card"><div class="stat-num">15%</div><div class="stat-label">de la population mondiale en situation de handicap</div></div>
+      <div class="stat-card"><div class="stat-num">96%</div><div class="stat-label">des sites web présentent des erreurs d'accessibilité détectables</div></div>
+      <div class="stat-card"><div class="stat-num">RGAA</div><div class="stat-label">Référentiel français obligatoire pour les services publics</div></div>
+    </div>
+
+    <div class="why-grid">
+      <div class="why-card"><div class="why-icon">⚖️</div><div class="why-title">Obligation légale</div><div class="why-desc">En France, la loi impose l'accessibilité aux services publics et aux entreprises de +250 salariés.</div></div>
+      <div class="why-card"><div class="why-icon">👁️</div><div class="why-title">Déficiences visuelles</div><div class="why-desc">Cécité, malvoyance, daltonisme — autant de profils qui dépendent d'un code accessible.</div></div>
+      <div class="why-card"><div class="why-icon">⌨️</div><div class="why-title">Navigation clavier</div><div class="why-desc">De nombreux utilisateurs ne peuvent pas ou ne veulent pas utiliser une souris.</div></div>
+      <div class="why-card"><div class="why-icon">📈</div><div class="why-title">SEO & performance</div><div class="why-desc">Un HTML sémantique et bien structuré améliore aussi votre référencement naturel.</div></div>
+    </div>
+
+    <div class="nav" style="border:none;padding-top:0;margin-top:0;">
+      <div></div>
+      <button class="btn btn-g" onclick="goTo(1)">Démarrer →</button>
+    </div>
+  </div>
+
+  <!-- S1 : WCAG -->
+  <div class="screen" id="s1">
+    <div class="section-label">// leçon_01</div>
+    <h2 class="lesson-h">Les standards WCAG</h2>
+    <p class="lesson-sub">Web Content Accessibility Guidelines — le référentiel international</p>
+
+    <div class="panel">
+      <p>Les <strong>WCAG</strong> (prononcez « wee-kag ») sont les directives internationales d'accessibilité publiées par le W3C. Elles s'organisent autour de <strong>4 principes fondamentaux</strong>, souvent mémorisés sous l'acronyme <strong>POUR</strong> :</p>
+    </div>
+
+    <div class="criteria-grid">
+      <div class="criteria-card">
+        <div class="criteria-num">P</div>
+        <div class="criteria-name">Perceptible</div>
+        <div class="criteria-desc">L'information doit être présentable de façons alternatives. Exemple : texte alternatif pour les images.</div>
+      </div>
+      <div class="criteria-card">
+        <div class="criteria-num">O</div>
+        <div class="criteria-name">Opérable</div>
+        <div class="criteria-desc">L'interface doit être utilisable avec un clavier, sans contrainte de temps.</div>
+      </div>
+      <div class="criteria-card">
+        <div class="criteria-num">U</div>
+        <div class="criteria-name">Understandable</div>
+        <div class="criteria-desc">Le contenu et l'interface doivent être compréhensibles. Langue déclarée, messages d'erreur clairs.</div>
+      </div>
+      <div class="criteria-card">
+        <div class="criteria-num">R</div>
+        <div class="criteria-name">Robuste</div>
+        <div class="criteria-desc">Le contenu doit être interprétable par les technologies d'assistance (lecteurs d'écran).</div>
+      </div>
+    </div>
+
+    <div class="alert info">
+      <span class="alert-icon">ℹ️</span>
+      <div>Les WCAG définissent 3 niveaux de conformité : <strong>A</strong> (minimum), <strong>AA</strong> (standard recommandé — le plus couramment exigé), et <strong>AAA</strong> (excellence, difficile à atteindre globalement).</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-o" onclick="goTo(0)">← Retour</button>
+      <button class="btn btn-g" onclick="goTo(2)">Leçon suivante →</button>
+    </div>
+  </div>
+
+  <!-- S2 : PRATIQUE -->
+  <div class="screen" id="s2">
+    <div class="section-label">// leçon_02</div>
+    <h2 class="lesson-h">Bonnes pratiques</h2>
+    <p class="lesson-sub">Les erreurs les plus fréquentes et comment les corriger</p>
+
+    <div class="panel">
+      <p><strong>1. Textes alternatifs sur les images</strong></p>
+      <p>Chaque image porteuse de sens doit avoir un attribut <code>alt</code> descriptif. Les images décoratives doivent avoir <code>alt=""</code> (vide).</p>
+    </div>
+    <div class="terminal">
+<span class="t-bad">✗ &lt;<span class="t-tag">img</span> <span class="t-attr">src</span>=<span class="t-val">"logo.png"</span>&gt;</span>
+<span class="t-bad">✗ &lt;<span class="t-tag">img</span> <span class="t-attr">src</span>=<span class="t-val">"photo.jpg"</span> <span class="t-attr">alt</span>=<span class="t-val">"image"</span>&gt;</span>   <span class="t-comment">← trop vague</span>
+
+<span class="t-good">✓ &lt;<span class="t-tag">img</span> <span class="t-attr">src</span>=<span class="t-val">"logo.png"</span> <span class="t-attr">alt</span>=<span class="t-val">"Logo de l'entreprise FormaPro"</span>&gt;</span>
+<span class="t-good">✓ &lt;<span class="t-tag">img</span> <span class="t-attr">src</span>=<span class="t-val">"deco.svg"</span> <span class="t-attr">alt</span>=<span class="t-val">""</span> <span class="t-attr">role</span>=<span class="t-val">"presentation"</span>&gt;</span>
+    </div>
+
+    <div class="panel">
+      <p><strong>2. Contraste des couleurs</strong></p>
+      <p>Le ratio de contraste entre le texte et son fond doit être d'au moins <strong>4.5:1</strong> pour un texte normal (niveau AA). Utilisez l'outil en ligne <em>Colour Contrast Analyser</em> pour vérifier.</p>
+    </div>
+
+    <div class="alert warn">
+      <span class="alert-icon">⚠️</span>
+      <div>Un texte gris clair sur fond blanc peut vous sembler lisible — mais il sera illisible pour une personne malvoyante. Testez toujours avec un outil de mesure.</div>
+    </div>
+
+    <div class="panel">
+      <p><strong>3. Labels sur les formulaires</strong></p>
+    </div>
+    <div class="terminal">
+<span class="t-bad">✗ &lt;<span class="t-tag">input</span> <span class="t-attr">type</span>=<span class="t-val">"text"</span> <span class="t-attr">placeholder</span>=<span class="t-val">"Votre nom"</span>&gt;</span>
+<span class="t-comment">  ← le placeholder disparaît à la saisie</span>
+
+<span class="t-good">✓ &lt;<span class="t-tag">label</span> <span class="t-attr">for</span>=<span class="t-val">"nom"</span>&gt;Votre nom&lt;/<span class="t-tag">label</span>&gt;</span>
+<span class="t-good">  &lt;<span class="t-tag">input</span> <span class="t-attr">type</span>=<span class="t-val">"text"</span> <span class="t-attr">id</span>=<span class="t-val">"nom"</span> <span class="t-attr">name</span>=<span class="t-val">"nom"</span>&gt;</span>
+    </div>
+
+    <div class="alert good">
+      <span class="alert-icon">✅</span>
+      <div>Règle simple : si vous fermez les yeux et naviguez uniquement au clavier et avec un lecteur d'écran (NVDA est gratuit), est-ce que votre site reste utilisable ? Si oui, vous êtes sur la bonne voie.</div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-o" onclick="goTo(1)">← Retour</button>
+      <button class="btn btn-g" onclick="goTo(3)">Passer au quiz →</button>
+    </div>
+  </div>
+
+  <!-- S3 : QUIZ -->
+  <div class="screen" id="s3">
+    <div class="section-label">// quiz_final</div>
+    <h2 class="lesson-h">Validation</h2>
+    <p class="lesson-sub">3 questions pour confirmer vos acquis</p>
+    <div class="panel" id="qpanel"></div>
+    <div class="nav">
+      <button class="btn btn-o" onclick="goTo(2)">← Retour</button>
+      <button class="btn btn-y" id="qnext" onclick="nextQ()" style="display:none">Suivant →</button>
+      <button class="btn btn-g" id="qfin" onclick="goTo(4)" style="display:none">Résultats →</button>
+    </div>
+  </div>
+
+  <!-- S4 : DONE -->
+  <div class="screen" id="s4">
+    <div class="done-wrap">
+      <div><span class="done-score" id="fscore">—</span><span class="done-denom"> / 3</span></div>
+      <h2 class="done-title">Module terminé !</h2>
+      <p class="done-sub">Vous comprenez maintenant les fondements de l'accessibilité web : les WCAG, leurs 4 principes POUR, et les erreurs les plus courantes à éviter.</p>
+      <button class="btn btn-g" onclick="restart()">↺ Recommencer</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SCREENS = 4;
+let cur = 0;
+let score = 0;
+let qi = 0;
+let answered = false;
+
+const qs = [
+  { q: "Que signifie l'acronyme WCAG ?", opts:["Web Content Accessibility Guidelines","Web Code & Accessibility Guide","World Content Accessibility Group","Web Clarity and Guidance"], c:0, fok:"Exact ! WCAG = Web Content Accessibility Guidelines — les directives du W3C.", fko:"WCAG signifie Web Content Accessibility Guidelines, publiées par le W3C." },
+  { q: "Quel niveau de conformité WCAG est généralement exigé par la loi française (RGAA) ?", opts:["Niveau A","Niveau AA","Niveau AAA","Aucun niveau spécifique"], c:1, fok:"Correct ! Le niveau AA est le standard de référence, exigé par le RGAA.", fko:"Le niveau AA est le standard recommandé et exigé par le référentiel français RGAA." },
+  { q: "Un attribut alt vide (alt='') sur une image signifie que :", opts:["L'image n'a pas de description","L'image est décorative et doit être ignorée par les lecteurs d'écran","L'image est manquante","Le développeur a oublié de remplir l'attribut"], c:1, fok:"Parfait ! alt='' indique intentionnellement que l'image est purement décorative.", fko:"alt='' (vide) est la bonne pratique pour les images décoratives : le lecteur d'écran les ignore." }
+];
+
+function goTo(n) {
+  document.getElementById('s'+cur).classList.remove('active');
+  cur = n;
+  document.getElementById('s'+n).classList.add('active');
+  updatePips();
+  if(n===3) renderQ();
+  if(n===4) document.getElementById('fscore').textContent = score;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updatePips() {
+  const c = document.getElementById('pips');
+  c.innerHTML = '';
+  for(let i=0;i<SCREENS;i++){
+    const p = document.createElement('div');
+    p.className = 'step-pip' + (i<cur?' done':i===cur?' current':'');
+    c.appendChild(p);
+  }
+}
+
+function renderQ() {
+  answered = false;
+  document.getElementById('qnext').style.display='none';
+  document.getElementById('qfin').style.display='none';
+  const q = qs[qi];
+  document.getElementById('qpanel').innerHTML = `
+    <div class="q-counter">// question_${qi+1} sur ${qs.length}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="q-opts">${q.opts.map((o,i)=>`<button class="q-opt" onclick="answerQ(${i})" id="qo${i}"><span class="q-letter">${String.fromCharCode(65+i)}</span>${o}</button>`).join('')}</div>
+    <div class="q-fb" id="qfb"></div>`;
+}
+
+function answerQ(i) {
+  if(answered) return;
+  answered = true;
+  const q = qs[qi];
+  const ok = i===q.c;
+  if(ok) score++;
+  document.querySelectorAll('.q-opt').forEach((el,idx)=>{
+    el.disabled=true;
+    if(idx===q.c) el.classList.add('ok');
+    else if(idx===i&&!ok) el.classList.add('ko');
+  });
+  const fb=document.getElementById('qfb');
+  fb.className='q-fb show '+(ok?'ok':'ko');
+  fb.innerHTML=`<strong>${ok?'✓ Correct !':'✗ Pas tout à fait'}</strong>${ok?q.fok:q.fko}`;
+  if(qi<qs.length-1) document.getElementById('qnext').style.display='inline-flex';
+  else document.getElementById('qfin').style.display='inline-flex';
+}
+
+function nextQ() { qi++; renderQ(); }
+function restart() { score=0;qi=0;cur=0; goTo(0); }
+updatePips();
+</script>
+</body>
+</html>

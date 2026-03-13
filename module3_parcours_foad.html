@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 3 — Concevoir un parcours FOAD</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf8f5;
+    --surface: #ffffff;
+    --ink: #1c1c1e;
+    --muted: #6b6b6b;
+    --border: #e8e2da;
+    --sage: #4a7c59;
+    --sage-light: #e8f2ec;
+    --terra: #c4622d;
+    --terra-light: #faeae2;
+    --sky: #2d6fa4;
+    --sky-light: #e2eef8;
+    --gold: #b8860b;
+    --gold-light: #fdf6e3;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  .nav {
+    position: sticky;
+    top: 0;
+    background: rgba(250,248,245,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 100;
+  }
+
+  .nav-brand {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-brand span {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .nav-steps {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nav-step {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-step.active { background: var(--ink); border-color: var(--ink); color: white; }
+  .nav-step.done { background: var(--sage-light); border-color: var(--sage); color: var(--sage); }
+  .nav-step-line { width: 24px; height: 1px; background: var(--border); }
+
+  .nav-progress {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeUp 0.4s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* INTRO */
+  .intro-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 48px;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 80px;
+    align-items: center;
+    min-height: calc(100vh - 60px);
+  }
+
+  .intro-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--sage-light);
+    color: var(--sage);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  .intro-h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(44px, 5vw, 68px);
+    line-height: 1.05;
+    margin-bottom: 24px;
+    font-weight: 300;
+  }
+
+  .intro-h1 em {
+    font-style: italic;
+    color: var(--terra);
+  }
+
+  .intro-p {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 36px;
+  }
+
+  .intro-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .meta-card {
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+  }
+
+  .meta-card .mv { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .meta-card .ml { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ADDIE VISUAL */
+  .addie-visual {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+  }
+
+  .addie-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    margin-bottom: 28px;
+    color: var(--ink);
+  }
+
+  .addie-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .addie-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .addie-step:last-child { border-bottom: none; }
+
+  .addie-letter {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .addie-step-content h5 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .addie-step-content p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .btn-primary { background: var(--ink); color: white; }
+  .btn-primary:hover { background: #2d2d2d; transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--border); }
+  .btn-outline:hover { border-color: var(--ink); }
+  .btn-sage { background: var(--sage); color: white; }
+  .btn-sage:hover { background: #3d6b4a; }
+
+  /* CONTENT PAGES */
+  .content-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 48px;
+  }
+
+  .page-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--terra);
+    margin-bottom: 12px;
+  }
+
+  .page-h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 44px;
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+
+  .page-intro {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 700px;
+  }
+
+  /* TWO COLUMNS */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 36px 0; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin: 36px 0; }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    transition: box-shadow 0.2s;
+  }
+
+  .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+
+  .card-icon { font-size: 28px; margin-bottom: 16px; }
+  .card h4 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+  .card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+  /* QUOTE */
+  .pull-quote {
+    padding: 36px 48px;
+    border-left: 4px solid var(--terra);
+    background: var(--terra-light);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin: 36px 0;
+  }
+
+  .pull-quote blockquote {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .pull-quote cite { font-size: 13px; color: var(--muted); font-weight: 600; }
+
+  /* CHECKLIST */
+  .checklist { margin: 28px 0; }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+
+  .check-item:last-child { border-bottom: none; }
+
+  .check-box {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .check-item.checked .check-box {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: white;
+  }
+
+  .check-item.checked .check-box::after { content: '✓'; font-size: 12px; font-weight: 700; }
+
+  .check-text h5 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .check-text p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  .check-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: var(--sage-light);
+    color: var(--sage);
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 16px;
+  }
+
+  /* SCENARIO BUILDER */
+  .scenario-builder {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 36px 0;
+  }
+
+  .sb-header {
+    background: var(--ink);
+    color: white;
+    padding: 24px 32px;
+  }
+
+  .sb-header h4 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 300; margin-bottom: 6px; }
+  .sb-header p { font-size: 13px; color: rgba(255,255,255,0.55); }
+
+  .sb-body { padding: 32px; }
+
+  .sb-field {
+    margin-bottom: 24px;
+  }
+
+  .sb-label {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sb-label span {
+    padding: 2px 8px;
+    background: var(--terra-light);
+    color: var(--terra);
+    border-radius: 4px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .sb-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .sb-option {
+    padding: 10px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .sb-option:hover { border-color: var(--ink); }
+  .sb-option.active { background: var(--ink); color: white; border-color: var(--ink); }
+
+  .sb-result {
+    margin-top: 28px;
+    padding: 24px;
+    background: var(--sage-light);
+    border: 1px solid rgba(74,124,89,0.2);
+    border-radius: var(--radius);
+    display: none;
+  }
+
+  .sb-result.show { display: block; animation: fadeUp 0.3s ease; }
+  .sb-result h5 { font-size: 16px; font-weight: 700; color: var(--sage); margin-bottom: 12px; }
+  .sb-result p { font-size: 14px; line-height: 1.7; color: var(--ink); }
+  .sb-result .reco { margin-top: 12px; padding: 12px; background: white; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; color: var(--muted); }
+
+  /* BOTTOM */
+  .page-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 48px;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    max-width: 100%;
+  }
+
+  .footer-info { font-size: 13px; color: var(--muted); }
+
+  /* SUCCESS */
+  .success-wrap {
+    min-height: calc(100vh - 60px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 48px;
+  }
+
+  .success-card {
+    max-width: 640px;
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 60px;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+  }
+
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--sage-light);
+    border: 2px solid var(--sage);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 28px;
+  }
+
+  .success-card h2 { font-family: 'Fraunces', serif; font-size: 44px; font-weight: 300; margin-bottom: 16px; }
+  .success-card p { font-size: 16px; line-height: 1.7; color: var(--muted); margin-bottom: 36px; }
+
+  .cert-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin: 28px 0;
+  }
+
+  .cert-block .cb-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 8px; }
+  .cert-block .cb-val { font-family: 'Fraunces', serif; font-size: 20px; color: var(--ink); }
+
+  @media (max-width: 768px) {
+    .intro-wrap { grid-template-columns: 1fr; gap: 40px; }
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .content-page { padding: 40px 24px; }
+    .intro-wrap { padding: 48px 24px; }
+    .page-footer { padding: 20px 24px; }
+    .nav { padding: 0 24px; }
+    .pull-quote { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    Formation Pro <span>· Module 3</span>
+  </div>
+  <div class="nav-steps">
+    <div class="nav-step active" id="ns1" onclick="goToScreen('intro')">1</div>
+    <div class="nav-step-line"></div>
+    <div class="nav-step" id="ns2" onclick="goToScreen('lesson1')">2</div>
+    <div class="nav-step-line"></div>
+    <div class="nav-step" id="ns3" onclick="goToScreen('lesson2')">3</div>
+    <div class="nav-step-line"></div>
+    <div class="nav-step" id="ns4" onclick="goToScreen('lesson3')">4</div>
+    <div class="nav-step-line"></div>
+    <div class="nav-step" id="ns5" onclick="goToScreen('success')">✓</div>
+  </div>
+  <div class="nav-progress" id="navPct">Étape 1 / 5</div>
+</nav>
+
+<!-- INTRO -->
+<div class="screen active" id="screen-intro">
+  <div class="intro-wrap">
+    <div>
+      <div class="intro-tag">🎯 Module 3 · Ingénierie pédagogique</div>
+      <h1 class="intro-h1">Concevoir un<br>parcours <em>FOAD</em><br>efficace</h1>
+      <p class="intro-p">De l'analyse des besoins à la livraison du module — maîtriser le processus ADDIE pour créer des formations à distance qui atteignent leurs objectifs.</p>
+      <div class="intro-meta">
+        <div class="meta-card"><div class="mv">25'</div><div class="ml">Durée</div></div>
+        <div class="meta-card"><div class="mv">3</div><div class="ml">Leçons</div></div>
+        <div class="meta-card"><div class="mv">1</div><div class="ml">Activité</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="goToScreen('lesson1')">Commencer la formation →</button>
+    </div>
+    <div>
+      <div class="addie-visual">
+        <div class="addie-title">Le modèle ADDIE</div>
+        <div class="addie-steps">
+          <div class="addie-step">
+            <div class="addie-letter" style="background:var(--sage-light);color:var(--sage)">A</div>
+            <div class="addie-step-content"><h5>Analyse</h5><p>Identifier les besoins, le public cible, les objectifs</p></div>
+          </div>
+          <div class="addie-step">
+            <div class="addie-letter" style="background:var(--sky-light);color:var(--sky)">D</div>
+            <div class="addie-step-content"><h5>Design</h5><p>Concevoir la structure, les séquences, les évaluations</p></div>
+          </div>
+          <div class="addie-step">
+            <div class="addie-letter" style="background:var(--terra-light);color:var(--terra)">D</div>
+            <div class="addie-step-content"><h5>Développement</h5><p>Produire les contenus, médiatiser, tester</p></div>
+          </div>
+          <div class="addie-step">
+            <div class="addie-letter" style="background:var(--gold-light);color:var(--gold)">I</div>
+            <div class="addie-step-content"><h5>Implémentation</h5><p>Déployer sur la plateforme, former les tuteurs</p></div>
+          </div>
+          <div class="addie-step">
+            <div class="addie-letter" style="background:#f0e8ff;color:#7c3aed">E</div>
+            <div class="addie-step-content"><h5>Évaluation</h5><p>Mesurer l'efficacité, recueillir les retours</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LESSON 1 : ANALYSE DES BESOINS -->
+<div class="screen" id="screen-lesson1">
+  <div class="content-page">
+    <div class="page-header">
+      <div class="page-label">Phase A · Analyse</div>
+      <h2 class="page-h2">L'analyse des besoins :<br>la fondation de tout</h2>
+      <p class="page-intro">Avant d'écrire une seule ligne de contenu, le concepteur pédagogique doit répondre à des questions précises sur le public, le contexte et les objectifs. Cette phase est la plus importante — et la plus souvent négligée.</p>
+    </div>
+
+    <div class="three-col">
+      <div class="card">
+        <div class="card-icon">👥</div>
+        <h4>Analyse du public</h4>
+        <p>Qui sont les apprenants ? Quel est leur niveau de départ ? Quelles contraintes (temps, matériel, connexion) ? Quelle motivation ?</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h4>Analyse des objectifs</h4>
+        <p>Qu'est-ce que l'apprenant doit être capable de faire après la formation ? On rédige des objectifs mesurables avec des verbes d'action.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏛️</div>
+        <h4>Analyse du contexte</h4>
+        <p>Quelles contraintes organisationnelles ? Quel budget ? Quelle plateforme ? Quel délai de production ? Quels outils disponibles ?</p>
+      </div>
+    </div>
+
+    <div class="pull-quote">
+      <blockquote>"Un objectif pédagogique bien formulé, c'est la moitié du travail de conception déjà accompli."</blockquote>
+      <cite>Robert Mager, Preparing Instructional Objectives, 1962</cite>
+    </div>
+
+    <h3 style="font-family:'Fraunces',serif; font-size:26px; font-weight:400; margin-bottom:20px;">La règle ABCD des objectifs pédagogiques</h3>
+    <div class="two-col">
+      <div>
+        <div class="checklist" id="abcd-list">
+          <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-text">
+              <h5>A — Acteur</h5>
+              <p>Qui fait l'action ? "L'apprenant sera capable de..."</p>
+            </div>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-text">
+              <h5>B — Behavior (comportement)</h5>
+              <p>Quel verbe d'action mesurable ? "...identifier, concevoir, rédiger, analyser..."</p>
+            </div>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-text">
+              <h5>C — Condition</h5>
+              <p>Dans quel contexte ? "...en s'appuyant sur le modèle ADDIE, sans aide extérieure..."</p>
+            </div>
+          </div>
+          <div class="check-item" onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <div class="check-text">
+              <h5>D — Degree (degré de réussite)</h5>
+              <p>Quel critère de succès ? "...avec un score minimum de 75%..."</p>
+            </div>
+          </div>
+        </div>
+        <div class="check-counter" id="abcdCounter">0 / 4 critères validés</div>
+      </div>
+      <div class="card" style="border-left:3px solid var(--sage);">
+        <h4 style="color:var(--sage); margin-bottom:16px;">✅ Exemple d'objectif bien formulé</h4>
+        <p style="font-style:italic; font-size:15px; line-height:1.7; color:var(--ink);">"À l'issue de ce module, <strong>l'apprenant</strong> sera capable de <strong>rédiger</strong> un objectif pédagogique complet au format ABCD, <strong>à partir d'un brief client donné</strong>, en <strong>moins de 10 minutes</strong>."</p>
+        <div style="margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div style="padding:8px;background:var(--sage-light);border-radius:6px;font-size:12px;color:var(--sage);text-align:center;font-weight:600;">A = L'apprenant</div>
+          <div style="padding:8px;background:var(--sky-light);border-radius:6px;font-size:12px;color:var(--sky);text-align:center;font-weight:600;">B = Rédiger</div>
+          <div style="padding:8px;background:var(--terra-light);border-radius:6px;font-size:12px;color:var(--terra);text-align:center;font-weight:600;">C = Brief client donné</div>
+          <div style="padding:8px;background:var(--gold-light);border-radius:6px;font-size:12px;color:var(--gold);text-align:center;font-weight:600;">D = En 10 min</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <div class="footer-info">Phase A · Analyse des besoins</div>
+    <div style="display:flex;gap:12px;">
+      <button class="btn btn-outline" onclick="goToScreen('intro')">← Accueil</button>
+      <button class="btn btn-primary" onclick="goToScreen('lesson2')">Phase suivante →</button>
+    </div>
+  </div>
+</div>
+
+<!-- LESSON 2 : DESIGN -->
+<div class="screen" id="screen-lesson2">
+  <div class="content-page">
+    <div class="page-header">
+      <div class="page-label">Phase D · Design</div>
+      <h2 class="page-h2">La conception pédagogique :<br>structurer avant de produire</h2>
+      <p class="page-intro">La phase de design transforme les objectifs en architecture de formation. On décide de la séquence, des modalités d'apprentissage et des évaluations avant de toucher à un seul outil de production.</p>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3 style="font-family:'Fraunces',serif;font-size:24px;font-weight:400;margin-bottom:20px;">Les 5 questions du design</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          {%['Quel est le parcours apprenant idéal ?','Quelles modalités : vidéo, texte, quiz, simulation ?','Comment évaluer les acquis de façon formative ?','Quelle est la granularité des modules ?','Comment créer de l\'engagement à distance ?'].map((q,i) => `
+          <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--terra-light);color:var(--terra);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">${i+1}</div>
+            <div style="font-size:14px;line-height:1.6;padding-top:3px;">${q}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div>
+        <div class="card" style="height:100%;">
+          <h4 style="margin-bottom:20px;">📐 Le storyboard pédagogique</h4>
+          <p style="margin-bottom:20px;font-size:14px;color:var(--muted);">Avant de produire, le concepteur rédige un storyboard : la description détaillée de chaque écran, son contenu, ses interactions et ses liens.</p>
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div style="background:var(--ink);color:white;padding:12px 16px;font-size:12px;font-family:monospace;display:flex;gap:16px;">
+              <span>Écran</span><span>Type</span><span>Contenu</span><span>Interaction</span>
+            </div>
+            <div style="font-size:12px;font-family:monospace;">
+              <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:60px 80px 1fr 100px;gap:16px;color:var(--muted);">
+                <span>E01</span><span>Intro</span><span>Titre + objectifs</span><span>Clic "Suivant"</span>
+              </div>
+              <div style="padding:10px 16px;border-bottom:1px solid var(--border);background:rgba(74,124,89,0.04);display:grid;grid-template-columns:60px 80px 1fr 100px;gap:16px;color:var(--muted);">
+                <span>E02</span><span>Vidéo</span><span>Concept clé 1</span><span>Lecture auto</span>
+              </div>
+              <div style="padding:10px 16px;display:grid;grid-template-columns:60px 80px 1fr 100px;gap:16px;color:var(--muted);">
+                <span>E03</span><span>Quiz</span><span>QCM 3 questions</span><span>Feedback immédiat</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pull-quote" style="border-color:var(--sky);background:var(--sky-light);">
+      <blockquote style="color:var(--ink);">"La formation à distance ne doit pas être la transposition numérique d'un cours en présentiel. Elle doit être reconçue pour le medium."</blockquote>
+      <cite>Daniel Peraya, Université de Genève</cite>
+    </div>
+
+    <h3 style="font-family:'Fraunces',serif;font-size:26px;font-weight:400;margin-bottom:20px;">Les modalités FOAD disponibles</h3>
+    <div class="three-col">
+      <div class="card" style="border-top:3px solid var(--sage);">
+        <div class="card-icon">🎬</div>
+        <h4>Synchrone</h4>
+        <p>Classe virtuelle, webinaire, tutorat en direct. Fort sentiment de présence, mais contraignant en termes d'horaires.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--sky);">
+        <div class="card-icon">📦</div>
+        <h4>Asynchrone</h4>
+        <p>Modules auto-formatifs, vidéos, quiz. Flexibilité maximale. Requiert une forte autonomie de l'apprenant.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--terra);">
+        <div class="card-icon">🔄</div>
+        <h4>Hybride</h4>
+        <p>Combinaison des deux. Séquences asynchrones pour les savoirs, synchrone pour les échanges et la pratique.</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <div class="footer-info">Phase D · Design pédagogique</div>
+    <div style="display:flex;gap:12px;">
+      <button class="btn btn-outline" onclick="goToScreen('lesson1')">← Précédent</button>
+      <button class="btn btn-primary" onclick="goToScreen('lesson3')">Phase suivante →</button>
+    </div>
+  </div>
+</div>
+
+<!-- LESSON 3 : ACTIVITÉ -->
+<div class="screen" id="screen-lesson3">
+  <div class="content-page">
+    <div class="page-header">
+      <div class="page-label">Activité finale · Mise en pratique</div>
+      <h2 class="page-h2">Construire ton<br>scénario pédagogique</h2>
+      <p class="page-intro">Utilise le générateur ci-dessous pour produire automatiquement des recommandations de conception adaptées à ta situation.</p>
+    </div>
+
+    <div class="scenario-builder">
+      <div class="sb-header">
+        <h4>Générateur de recommandations FOAD</h4>
+        <p>Sélectionne tes paramètres — les recommandations s'adaptent en temps réel</p>
+      </div>
+      <div class="sb-body">
+        <div class="sb-field">
+          <div class="sb-label">Public cible <span>Choisir</span></div>
+          <div class="sb-options">
+            <button class="sb-option" data-group="public" data-val="novice" onclick="selectOption(this)">Débutants complets</button>
+            <button class="sb-option" data-group="public" data-val="inter" onclick="selectOption(this)">Praticiens en poste</button>
+            <button class="sb-option" data-group="public" data-val="expert" onclick="selectOption(this)">Experts en reconversion</button>
+          </div>
+        </div>
+        <div class="sb-field">
+          <div class="sb-label">Durée disponible <span>Choisir</span></div>
+          <div class="sb-options">
+            <button class="sb-option" data-group="duree" data-val="short" onclick="selectOption(this)">< 30 min / semaine</button>
+            <button class="sb-option" data-group="duree" data-val="medium" onclick="selectOption(this)">1-2h / semaine</button>
+            <button class="sb-option" data-group="duree" data-val="long" onclick="selectOption(this)">> 3h / semaine</button>
+          </div>
+        </div>
+        <div class="sb-field">
+          <div class="sb-label">Objectif principal <span>Choisir</span></div>
+          <div class="sb-options">
+            <button class="sb-option" data-group="objectif" data-val="savoir" onclick="selectOption(this)">Acquérir des savoirs</button>
+            <button class="sb-option" data-group="objectif" data-val="savoirfaire" onclick="selectOption(this)">Développer des compétences</button>
+            <button class="sb-option" data-group="objectif" data-val="certif" onclick="selectOption(this)">Préparer une certification</button>
+          </div>
+        </div>
+
+        <div class="sb-result" id="sbResult">
+          <h5 id="sbResultTitle">Recommandations personnalisées</h5>
+          <p id="sbResultText"></p>
+          <div class="reco" id="sbResultReco"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <div class="footer-info">Activité finale</div>
+    <div style="display:flex;gap:12px;">
+      <button class="btn btn-outline" onclick="goToScreen('lesson2')">← Précédent</button>
+      <button class="btn btn-sage" onclick="goToScreen('success')">Terminer le module ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="screen" id="screen-success">
+  <div class="success-wrap">
+    <div class="success-card">
+      <div class="success-icon">🌿</div>
+      <h2>Félicitations !</h2>
+      <p>Tu maîtrises maintenant les fondamentaux de la conception d'un parcours FOAD avec le modèle ADDIE.</p>
+      <div class="cert-block">
+        <div class="cb-label">Compétences acquises</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center;">
+          <span style="padding:6px 14px;background:var(--sage-light);color:var(--sage);border-radius:20px;font-size:13px;font-weight:600;">Modèle ADDIE</span>
+          <span style="padding:6px 14px;background:var(--sky-light);color:var(--sky);border-radius:20px;font-size:13px;font-weight:600;">Objectifs ABCD</span>
+          <span style="padding:6px 14px;background:var(--terra-light);color:var(--terra);border-radius:20px;font-size:13px;font-weight:600;">Design pédagogique</span>
+          <span style="padding:6px 14px;background:var(--gold-light);color:var(--gold);border-radius:20px;font-size:13px;font-weight:600;">Modalités FOAD</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="goToScreen('intro')">↺ Revoir le module</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const screens = ['intro','lesson1','lesson2','lesson3','success'];
+  const selections = { public: null, duree: null, objectif: null };
+
+  function goToScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    window.scrollTo(0, 0);
+
+    const idx = screens.indexOf(id) + 1;
+    document.querySelectorAll('.nav-step').forEach((ns, i) => {
+      ns.className = 'nav-step';
+      if (i + 1 < idx) ns.classList.add('done');
+      else if (i + 1 === idx) ns.classList.add('active');
+    });
+    document.getElementById('navPct').textContent = `Étape ${idx} / ${screens.length}`;
+  }
+
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+    const total = document.querySelectorAll('#abcd-list .check-item').length;
+    const checked = document.querySelectorAll('#abcd-list .check-item.checked').length;
+    document.getElementById('abcdCounter').textContent = `${checked} / ${total} critères validés`;
+    document.getElementById('abcdCounter').style.background = checked === total ? 'var(--sage-light)' : '';
+    document.getElementById('abcdCounter').style.color = checked === total ? 'var(--sage)' : '';
+  }
+
+  function selectOption(el) {
+    const group = el.dataset.group;
+    document.querySelectorAll(`[data-group="${group}"]`).forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+    selections[group] = el.dataset.val;
+    updateScenario();
+  }
+
+  function updateScenario() {
+    if (!selections.public || !selections.duree || !selections.objectif) return;
+
+    const recommendations = {
+      'novice-short-savoir': {
+        title: '📱 Format micro-learning espacé',
+        text: 'Des apprenants débutants avec peu de temps disponibles ont besoin de contenus courts, fréquents et immédiatement applicables.',
+        reco: '🔧 Recommandation : modules de 5-7 min max, une seule idée par écran, notifications de rappel espacées. Modalité : asynchrone avec quiz de rappel hebdomadaire.'
+      },
+      'inter-medium-savoirfaire': {
+        title: '🔄 Parcours hybride pratique',
+        text: 'Des praticiens avec du temps et un objectif de montée en compétences bénéficient d\'une combinaison théorie/pratique avec échanges entre pairs.',
+        reco: '🔧 Recommandation : 70% asynchrone (vidéos + exercices), 30% synchrone (classes virtuelles bimensuelles). Inclure des études de cas réels de leur secteur.'
+      },
+      'expert-long-certif': {
+        title: '📚 Parcours intensif structuré',
+        text: 'Des experts disposant de temps et visant une certification ont besoin d\'un parcours rigoureux avec évaluations fréquentes et feedback détaillé.',
+        reco: '🔧 Recommandation : modules denses, quiz formatifs après chaque section, simulation d\'examen en conditions réelles. Tutorat individuel conseillé.'
+      }
+    };
+
+    const key = `${selections.public}-${selections.duree}-${selections.objectif}`;
+    const fallback = {
+      title: '✅ Parcours personnalisé généré',
+      text: `Pour un public "${selections.public}" avec "${selections.duree}" de disponibilité et l'objectif "${selections.objectif}", voici les recommandations clés.`,
+      reco: '🔧 Privilégie des modules courts et séquencés (5-10 min), des évaluations formatives fréquentes, et au moins un temps synchrone par semaine pour maintenir l\'engagement à distance.'
+    };
+
+    const rec = recommendations[key] || fallback;
+    document.getElementById('sbResultTitle').textContent = rec.title;
+    document.getElementById('sbResultText').textContent = rec.text;
+    document.getElementById('sbResultReco').textContent = rec.reco;
+    document.getElementById('sbResult').classList.add('show');
+  }
+</script>
+</body>
+</html>
