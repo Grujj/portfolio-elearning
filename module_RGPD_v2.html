@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module — RGPD Essentiel pour les salariés</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f0f0ff;
+  --white: #ffffff;
+  --navy: #1a1d3a;
+  --violet: #4f46e5;
+  --violetD: #3730a3;
+  --violetL: #eef2ff;
+  --amber: #e8a020;
+  --amberL: #fdf0d5;
+  --vert: #1a6b3a;
+  --vertL: #d4edda;
+  --rouge: #c2002f;
+  --rougeL: #fff0f3;
+  --blue: #2356c8;
+  --blueL: #e6f1fb;
+  --text: #1a1d3a;
+  --muted: #6b7280;
+  --radius: 20px;
+  --shadow: 0 4px 24px rgba(79,70,229,.13);
+}
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── TOPBAR ── */
+.top {
+  background: var(--navy);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.top-brand { color: white; font-weight: 900; font-size: .95rem; display: flex; align-items: center; gap: 8px; }
+.top-brand span { font-size: 1.2rem; }
+.pills { display: flex; gap: 8px; }
+.pill {
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.7);
+  font-size: .72rem;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 20px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.pill.done { background: var(--amber); color: var(--navy); }
+.pill.active { background: var(--violet); color: white; }
+
+/* ── PROGRESS ── */
+.progress-bar {
+  height: 4px;
+  background: rgba(255,255,255,.1);
+  position: relative;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--violet);
+  transition: width .5s ease;
+}
+
+/* ── WRAP ── */
+.wrap { max-width: 860px; margin: 0 auto; padding: 40px 24px; }
+
+/* ── SCREENS ── */
+.screen { display: none; }
+.screen.active { display: block; animation: pop .35s cubic-bezier(.2,.8,.4,1); }
+@keyframes pop { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, var(--violet) 0%, #312e81 100%);
+  border-radius: var(--radius);
+  padding: 48px 40px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.hero::after {
+  content: '🔐';
+  position: absolute;
+  right: 32px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 8rem;
+  opacity: .1;
+  pointer-events: none;
+}
+.hero-tag {
+  display: inline-block;
+  background: rgba(255,255,255,.15);
+  color: rgba(255,255,255,.9);
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+.hero h1 { font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 900; line-height: 1.1; margin-bottom: 14px; }
+.hero h1 em { color: var(--amber); font-style: normal; }
+.hero p { color: rgba(255,255,255,.75); font-size: .95rem; line-height: 1.65; max-width: 500px; }
+
+/* ── STATS GRID ── */
+.stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 24px; }
+.stat {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.stat-num { font-size: 2rem; font-weight: 900; color: var(--violet); }
+.stat-label { font-size: .75rem; color: var(--muted); font-weight: 700; margin-top: 4px; text-transform: uppercase; letter-spacing: .05em; }
+
+/* ── BTN ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 40px;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: .95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+}
+.btn:active { transform: scale(.97); }
+.btn-primary { background: var(--violet); color: white; box-shadow: 0 4px 16px rgba(79,70,229,.4); }
+.btn-primary:hover { box-shadow: 0 6px 24px rgba(79,70,229,.5); }
+.btn-outline { background: white; color: var(--violet); border: 2px solid var(--violet); }
+.btn-amber { background: var(--amber); color: var(--navy); box-shadow: 0 4px 16px rgba(232,160,32,.3); }
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+
+/* ── LESSON HEADER ── */
+.lesson-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.lesson-num {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  background: var(--violet);
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.lesson-meta h2 { font-size: 1.35rem; font-weight: 900; color: var(--navy); }
+.lesson-meta p { font-size: .82rem; color: var(--muted); font-weight: 600; margin-top: 2px; }
+
+/* ── CARD ── */
+.card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.card-title {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--navy);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── DEFINITION BOX ── */
+.def-box {
+  background: var(--violetL);
+  border-left: 4px solid var(--violet);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin: 16px 0;
+}
+.def-box p { font-size: .9rem; line-height: 1.65; color: var(--navy); }
+.def-box strong { color: var(--violet); }
+
+/* ── TAGS GRID ── */
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.tag {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: .8rem;
+  font-weight: 700;
+}
+.tag-violet { background: var(--violetL); color: var(--violet); }
+.tag-amber  { background: var(--amberL);  color: #7a5500; }
+.tag-rouge  { background: var(--rougeL);  color: var(--rouge); }
+.tag-vert   { background: var(--vertL);   color: var(--vert); }
+.tag-blue   { background: var(--blueL);   color: var(--blue); }
+
+/* ── ACCORDION ── */
+.accordion { border: 1.5px solid #e5e7eb; border-radius: 14px; overflow: hidden; margin-bottom: 16px; }
+.acc-item { border-bottom: 1px solid #e5e7eb; }
+.acc-item:last-child { border-bottom: none; }
+.acc-btn {
+  width: 100%;
+  background: white;
+  border: none;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-size: .9rem;
+  font-weight: 800;
+  color: var(--navy);
+  text-align: left;
+  transition: background .15s;
+}
+.acc-btn:hover { background: var(--violetL); }
+.acc-btn.open { background: var(--violet); color: white; }
+.acc-arrow { font-size: 1rem; transition: transform .25s; }
+.acc-btn.open .acc-arrow { transform: rotate(180deg); }
+.acc-body { display: none; padding: 16px 20px; font-size: .875rem; line-height: 1.7; color: var(--muted); background: #fafafa; }
+.acc-body.open { display: block; animation: fadeIn .2s ease; }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+/* ── FLASHCARDS ── */
+.flashcards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 14px; }
+.flashcard {
+  height: 140px;
+  perspective: 800px;
+  cursor: pointer;
+}
+.flashcard-inner {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .45s cubic-bezier(.4,0,.2,1);
+  border-radius: 16px;
+}
+.flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+.flashcard-front, .flashcard-back {
+  position: absolute;
+  width: 100%; height: 100%;
+  border-radius: 16px;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+}
+.flashcard-front {
+  background: var(--violet);
+  color: white;
+}
+.flashcard-front .fc-q { font-size: .85rem; font-weight: 800; line-height: 1.4; }
+.flashcard-front .fc-hint { font-size: .7rem; color: rgba(255,255,255,.6); margin-top: 8px; }
+.flashcard-back { background: var(--navy); color: white; transform: rotateY(180deg); }
+.flashcard-back .fc-vrai { color: #4ade80; font-weight: 900; font-size: .95rem; margin-bottom: 6px; }
+.flashcard-back .fc-faux { color: #f87171; font-weight: 900; font-size: .95rem; margin-bottom: 6px; }
+.flashcard-back .fc-exp { font-size: .75rem; line-height: 1.5; color: rgba(255,255,255,.8); }
+
+/* ── PROCESS ── */
+.process { display: flex; flex-direction: column; gap: 0; }
+.process-step {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+.process-step::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 48px;
+  bottom: -20px;
+  width: 2px;
+  background: #e5e7eb;
+}
+.process-step:last-child::before { display: none; }
+.process-icon {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--violet);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: .85rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.process-content { padding-bottom: 28px; flex: 1; }
+.process-content h4 { font-size: .9rem; font-weight: 900; color: var(--navy); margin-bottom: 4px; }
+.process-content p { font-size: .83rem; line-height: 1.6; color: var(--muted); }
+
+/* ── ALERT BOXES ── */
+.alert {
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: .875rem;
+  line-height: 1.6;
+}
+.alert-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+.alert-amber { background: var(--amberL); color: #7a5500; }
+.alert-rouge  { background: var(--rougeL); color: #7a001a; }
+.alert-vert   { background: var(--vertL);  color: #0d4020; }
+.alert-violet { background: var(--violetL); color: var(--violetD); }
+
+/* ── REFLEXES GRID ── */
+.reflex-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 14px; }
+.reflex-card {
+  background: var(--violetL);
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+  border: 2px solid transparent;
+}
+.reflex-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(79,70,229,.2); }
+.reflex-card.expanded { border-color: var(--violet); background: white; }
+.reflex-num { font-size: 1.6rem; font-weight: 900; color: var(--violet); margin-bottom: 6px; }
+.reflex-title { font-size: .85rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+.reflex-body { font-size: .8rem; line-height: 1.6; color: var(--muted); display: none; margin-top: 10px; }
+.reflex-card.expanded .reflex-body { display: block; }
+
+/* ── QUIZ ── */
+.quiz-header {
+  background: linear-gradient(135deg, var(--violet), #312e81);
+  border-radius: var(--radius);
+  padding: 32px;
+  color: white;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.quiz-header h2 { font-size: 1.5rem; font-weight: 900; margin-bottom: 8px; }
+.quiz-header p { color: rgba(255,255,255,.75); font-size: .9rem; }
+.quiz-q-num { font-size: .75rem; font-weight: 800; color: var(--violet); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
+.quiz-question { font-size: 1.05rem; font-weight: 800; color: var(--navy); margin-bottom: 20px; line-height: 1.45; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-opt {
+  width: 100%;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--navy);
+  text-align: left;
+  transition: border-color .15s, background .15s;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--violet); background: var(--violetL); }
+.quiz-opt.correct { border-color: var(--vert); background: var(--vertL); color: var(--vert); }
+.quiz-opt.wrong   { border-color: var(--rouge); background: var(--rougeL); color: var(--rouge); }
+.opt-circle {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem;
+  font-weight: 900;
+  flex-shrink: 0;
+  transition: all .15s;
+}
+.quiz-opt.correct .opt-circle { background: var(--vert); border-color: var(--vert); color: white; }
+.quiz-opt.wrong   .opt-circle { background: var(--rouge); border-color: var(--rouge); color: white; }
+.quiz-feedback {
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-top: 16px;
+  font-size: .875rem;
+  line-height: 1.6;
+  font-weight: 700;
+  display: none;
+}
+.quiz-feedback.show { display: block; animation: fadeIn .3s ease; }
+.quiz-feedback.ok { background: var(--vertL); color: #0d4020; }
+.quiz-feedback.ko { background: var(--rougeL); color: #7a001a; }
+
+/* ── SCORE SCREEN ── */
+.score-ring {
+  width: 130px; height: 130px;
+  margin: 0 auto 20px;
+  position: relative;
+}
+.score-ring svg { transform: rotate(-90deg); }
+.score-ring-val {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.score-num { font-size: 2rem; font-weight: 900; color: var(--violet); }
+.score-denom { font-size: .8rem; color: var(--muted); font-weight: 700; }
+.answers-recap { margin-top: 20px; }
+.recap-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: .85rem;
+}
+.recap-icon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+.recap-q { color: var(--navy); font-weight: 700; line-height: 1.4; }
+.recap-a { color: var(--muted); font-size: .8rem; margin-top: 2px; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .wrap { padding: 28px 16px; }
+  .hero { padding: 32px 24px; }
+  .stats { grid-template-columns: repeat(3,1fr); gap: 8px; }
+  .flashcards { grid-template-columns: repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="top">
+  <div class="top-brand"><span>🔐</span> RGPD Essentiel</div>
+  <div class="pills">
+    <span class="pill" id="pill-1">L1</span>
+    <span class="pill" id="pill-2">L2</span>
+    <span class="pill" id="pill-3">L3</span>
+    <span class="pill" id="pill-q">Quiz</span>
+  </div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+
+<div class="wrap">
+
+<!-- ══ SCREEN 0 : INTRO ══ -->
+<div class="screen active" id="s0">
+  <div class="hero">
+    <div class="hero-tag">Sensibilisation · 20 min</div>
+    <h1>RGPD<br><em>Ce que tout salarié</em><br>doit savoir</h1>
+    <p>Comprendre vos obligations, les droits des personnes et les bons réflexes au quotidien.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label">Leçons</div></div>
+    <div class="stat"><div class="stat-num">20<small style="font-size:1rem">min</small></div><div class="stat-label">Durée</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Questions</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🎯 Objectifs</div>
+    <div class="tags">
+      <span class="tag tag-violet">Identifier une donnée personnelle</span>
+      <span class="tag tag-amber">Connaître les 6 droits RGPD</span>
+      <span class="tag tag-vert">Adopter les bons réflexes</span>
+      <span class="tag tag-rouge">Réagir face à un incident</span>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="go(1)">Commencer →</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 1 : LEÇON 1 ══ -->
+<div class="screen" id="s1">
+  <div class="lesson-header">
+    <div class="lesson-num">L1</div>
+    <div class="lesson-meta">
+      <h2>Qu'est-ce qu'une donnée personnelle ?</h2>
+      <p>6 min · Définition · Catégories · Vrai/Faux</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📖 Définition</div>
+    <div class="def-box">
+      <p>Une <strong>donnée personnelle</strong> est toute information permettant d'identifier une personne physique, <strong>directement ou indirectement</strong>.</p>
+    </div>
+    <p style="font-size:.88rem;line-height:1.7;color:var(--muted);margin-top:12px;">Le RGPD (Règlement Général sur la Protection des Données) encadre la collecte, le stockage et l'utilisation de ces données dans toute l'Union Européenne depuis mai 2018.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+      <div style="background:var(--violetL);border-radius:12px;padding:14px;">
+        <div style="font-size:.75rem;font-weight:800;color:var(--violet);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Identification directe</div>
+        <div class="tags">
+          <span class="tag tag-violet">Nom, prénom</span>
+          <span class="tag tag-violet">Email</span>
+          <span class="tag tag-violet">Photo</span>
+          <span class="tag tag-violet">Téléphone</span>
+          <span class="tag tag-violet">Empreinte</span>
+        </div>
+      </div>
+      <div style="background:var(--amberL);border-radius:12px;padding:14px;">
+        <div style="font-size:.75rem;font-weight:800;color:#7a5500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Identification indirecte</div>
+        <div class="tags">
+          <span class="tag tag-amber">Adresse IP</span>
+          <span class="tag tag-amber">Cookie</span>
+          <span class="tag tag-amber">Plaque auto</span>
+          <span class="tag tag-amber">GPS</span>
+        </div>
+      </div>
+    </div>
+    <div class="alert alert-amber" style="margin-top:16px;">
+      <span class="alert-icon">💡</span>
+      <span>Une donnée apparemment anodine peut devenir personnelle combinée à d'autres. Le contexte compte toujours.</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🗂️ Les catégories de données</div>
+    <div class="accordion">
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span>📄 Données ordinaires</span><span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">Nom, adresse, email, téléphone, CV, historique d'achat. Elles nécessitent une base légale pour être traitées, mais sans protection renforcée.</div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span>⚠️ Données sensibles — protection maximale</span><span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">Origine ethnique, opinions politiques, convictions religieuses, données de santé, données génétiques ou biométriques, vie sexuelle. Leur traitement est en principe <strong>interdit</strong>, sauf exceptions strictes.</div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span>⚖️ Données relatives aux infractions</span><span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">Condamnations pénales et infractions. Traitement réservé aux autorités publiques et, sous conditions, à certains professionnels habilités.</div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn" onclick="toggleAcc(this)">
+          <span>👶 Données des mineurs</span><span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body">Protection renforcée. Le consentement d'un parent ou tuteur légal est requis pour les moins de 15 ans en France.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🃏 Vrai ou Faux — Cliquez sur chaque carte !</div>
+    <div class="flashcards">
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="fc-q">Un email professionnel contient des données personnelles</div>
+            <div class="fc-hint">↻ Retourner</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="fc-vrai">✓ VRAI</div>
+            <div class="fc-exp">L'adresse email identifie une personne. Elle est soumise au RGPD.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="fc-q">Une liste de prénoms sans nom de famille n'est pas personnelle</div>
+            <div class="fc-hint">↻ Retourner</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="fc-faux">✗ FAUX</div>
+            <div class="fc-exp">Un prénom seul peut identifier quelqu'un dans un contexte donné (petite équipe, prénom rare).</div>
+          </div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="fc-q">Les données de santé peuvent être partagées librement entre collègues</div>
+            <div class="fc-hint">↻ Retourner</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="fc-faux">✗ FAUX</div>
+            <div class="fc-exp">Données sensibles = protection maximale. Partage très encadré, même en interne.</div>
+          </div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <div class="fc-q">Une photo de groupe sur le site entreprise nécessite un consentement</div>
+            <div class="fc-hint">↻ Retourner</div>
+          </div>
+          <div class="flashcard-back">
+            <div class="fc-vrai">✓ VRAI</div>
+            <div class="fc-exp">Toute personne identifiable a un droit à l'image. Son consentement est nécessaire.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="go(0)">← Retour</button>
+    <button class="btn btn-primary" onclick="go(2)">Leçon 2 →</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 2 : LEÇON 2 ══ -->
+<div class="screen" id="s2">
+  <div class="lesson-header">
+    <div class="lesson-num">L2</div>
+    <div class="lesson-meta">
+      <h2>Vos droits et ceux des personnes</h2>
+      <p>7 min · Les 6 droits RGPD · Délais légaux</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔄 Les 6 droits fondamentaux</div>
+    <div class="process">
+      <div class="process-step">
+        <div class="process-icon">1</div>
+        <div class="process-content">
+          <h4>Droit d'accès</h4>
+          <p>Toute personne peut demander à consulter l'ensemble des données que votre entreprise détient sur elle, et obtenir une copie.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="process-icon">2</div>
+        <div class="process-content">
+          <h4>Droit de rectification</h4>
+          <p>Si une donnée est inexacte ou incomplète, la personne peut demander sa correction immédiate.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="process-icon">3</div>
+        <div class="process-content">
+          <h4>Droit à l'effacement</h4>
+          <p>Aussi appelé « droit à l'oubli ». La personne peut demander la suppression de ses données dans certains cas : données inutiles, retrait du consentement…</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="process-icon">4</div>
+        <div class="process-content">
+          <h4>Droit à la portabilité</h4>
+          <p>La personne peut récupérer ses données dans un format lisible par machine pour les transmettre à un autre prestataire.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="process-icon">5</div>
+        <div class="process-content">
+          <h4>Droit d'opposition</h4>
+          <p>La personne peut s'opposer au traitement de ses données, notamment à des fins de prospection commerciale.</p>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="process-icon" style="background:var(--amber);color:var(--navy);">6</div>
+        <div class="process-content">
+          <h4>Droit à la limitation</h4>
+          <p>La personne peut demander le gel temporaire du traitement de ses données, par exemple le temps d'une contestation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⏱️ Délai légal de réponse</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+      <div style="background:var(--violetL);border-radius:14px;padding:20px;text-align:center;">
+        <div style="font-size:2.5rem;font-weight:900;color:var(--violet);">1</div>
+        <div style="font-size:1rem;font-weight:800;color:var(--navy);">mois</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:6px;">délai standard</div>
+      </div>
+      <div style="background:var(--amberL);border-radius:14px;padding:20px;text-align:center;">
+        <div style="font-size:2.5rem;font-weight:900;color:#7a5500;">3</div>
+        <div style="font-size:1rem;font-weight:800;color:var(--navy);">mois</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:6px;">cas complexes (avec info)</div>
+      </div>
+    </div>
+    <div class="alert alert-violet">
+      <span class="alert-icon">📧</span>
+      <span>Vous recevez une demande d'exercice de droits ? <strong>Ne répondez pas seul.</strong> Transmettez immédiatement à votre DPO ou responsable RGPD désigné.</span>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="go(1)">← Leçon 1</button>
+    <button class="btn btn-primary" onclick="go(3)">Leçon 3 →</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 3 : LEÇON 3 ══ -->
+<div class="screen" id="s3">
+  <div class="lesson-header">
+    <div class="lesson-num">L3</div>
+    <div class="lesson-meta">
+      <h2>Vos obligations au quotidien</h2>
+      <p>7 min · 5 réflexes · Incidents · Récapitulatif</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">✅ 5 réflexes à adopter — Cliquez pour développer</div>
+    <div class="reflex-grid">
+      <div class="reflex-card" onclick="this.classList.toggle('expanded')">
+        <div class="reflex-num">01</div>
+        <div class="reflex-title">Collecter le minimum</div>
+        <div class="reflex-body">Ne demandez jamais plus de données que ce dont vous avez réellement besoin. Vous n'avez pas besoin de la date de naissance d'un client pour lui envoyer un devis.</div>
+      </div>
+      <div class="reflex-card" onclick="this.classList.toggle('expanded')">
+        <div class="reflex-num">02</div>
+        <div class="reflex-title">Ne pas partager sans autorisation</div>
+        <div class="reflex-body">Vous ne pouvez pas transmettre des données à un tiers sans base légale. Cela inclut d'autres services internes non autorisés.</div>
+      </div>
+      <div class="reflex-card" onclick="this.classList.toggle('expanded')">
+        <div class="reflex-num">03</div>
+        <div class="reflex-title">Sécuriser les données</div>
+        <div class="reflex-body">Mot de passe fort, écran verrouillé en absence, documents confidentiels non laissés en évidence, emails chiffrés pour données sensibles.</div>
+      </div>
+      <div class="reflex-card" onclick="this.classList.toggle('expanded')">
+        <div class="reflex-num">04</div>
+        <div class="reflex-title">Signaler tout incident</div>
+        <div class="reflex-body">Clé USB perdue, email envoyé à la mauvaise personne, piratage ? Signalez immédiatement à votre DPO. La CNIL doit être notifiée sous 72h.</div>
+      </div>
+      <div class="reflex-card" onclick="this.classList.toggle('expanded')">
+        <div class="reflex-num">05</div>
+        <div class="reflex-title">Respecter les durées de conservation</div>
+        <div class="reflex-body">Les données ont une durée de vie. Un CV de candidat non retenu ne se conserve pas indéfiniment. Respectez les durées définies par votre entreprise.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🚨 En cas de violation — La règle des 72h</div>
+    <div class="alert alert-rouge">
+      <span class="alert-icon">⚠️</span>
+      <span>Vol d'ordinateur, cyberattaque, fichier client envoyé par erreur, téléphone perdu : c'est une violation de données. L'entreprise a <strong>72 heures</strong> pour notifier la CNIL.</span>
+    </div>
+    <div style="margin-top:16px;">
+      <div style="font-size:.85rem;font-weight:800;color:var(--navy);margin-bottom:10px;">Votre rôle en tant que salarié :</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;"><span style="width:24px;height:24px;background:var(--rouge);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;flex-shrink:0;">1</span> Signalez immédiatement à votre responsable ou DPO</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;"><span style="width:24px;height:24px;background:var(--rouge);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;flex-shrink:0;">2</span> Ne tentez pas de gérer l'incident vous-même</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;"><span style="width:24px;height:24px;background:var(--rouge);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;flex-shrink:0;">3</span> Ne supprimez aucune donnée liée à l'incident</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;"><span style="width:24px;height:24px;background:var(--rouge);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;flex-shrink:0;">4</span> Conservez toute preuve (emails, captures d'écran)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="background:var(--violetL);border:2px solid var(--violet);">
+    <div class="card-title" style="color:var(--violet);">📋 Ce qu'il faut retenir</div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:.87rem;line-height:1.6;">
+      <div style="display:flex;gap:8px;"><span>🔵</span><span>Donnée personnelle = toute info qui identifie une personne, directement ou indirectement</span></div>
+      <div style="display:flex;gap:8px;"><span>🔵</span><span>6 droits RGPD : accès, rectification, effacement, portabilité, opposition, limitation</span></div>
+      <div style="display:flex;gap:8px;"><span>🔵</span><span>Délai de réponse aux demandes : 1 mois maximum</span></div>
+      <div style="display:flex;gap:8px;"><span>🔵</span><span>5 réflexes : minimiser, ne pas partager, sécuriser, signaler, respecter les durées</span></div>
+      <div style="display:flex;gap:8px;"><span>🔵</span><span>Violation de données → signalement interne immédiat → CNIL sous 72h</span></div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="go(2)">← Leçon 2</button>
+    <button class="btn btn-amber" onclick="go(4)">Passer le quiz →</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 4 : QUIZ ══ -->
+<div class="screen" id="s4">
+  <div class="quiz-header">
+    <h2>🧠 Quiz de validation</h2>
+    <p>5 questions · Score minimum 80 % · Bonne chance !</p>
+  </div>
+  <div id="quiz-container"></div>
+</div>
+
+<!-- ══ SCREEN 5 : SCORE ══ -->
+<div class="screen" id="s5">
+  <div class="card" style="text-align:center;padding:40px 28px;">
+    <div id="score-header"></div>
+    <div id="score-ring-container" class="score-ring" style="margin:20px auto;">
+      <svg width="130" height="130" viewBox="0 0 130 130">
+        <circle cx="65" cy="65" r="54" fill="none" stroke="#e5e7eb" stroke-width="12"/>
+        <circle id="score-arc" cx="65" cy="65" r="54" fill="none" stroke="#4f46e5" stroke-width="12" stroke-linecap="round" stroke-dasharray="339.3" stroke-dashoffset="339.3"/>
+      </svg>
+      <div class="score-ring-val">
+        <div class="score-num" id="score-display">0/5</div>
+        <div class="score-denom" id="score-pct">0%</div>
+      </div>
+    </div>
+    <div id="score-message" style="font-size:.95rem;line-height:1.7;color:var(--muted);margin:16px 0 24px;"></div>
+    <div class="answers-recap" id="answers-recap"></div>
+  </div>
+  <div class="btn-row" style="justify-content:center;">
+    <button class="btn btn-outline" onclick="restartQuiz()">Réessayer le quiz</button>
+    <button class="btn btn-primary" onclick="go(0)">← Accueil</button>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+const questions = [
+  {
+    q: "Parmi ces informations, laquelle EST une donnée personnelle ?",
+    opts: ["Le chiffre d'affaires de l'entreprise","L'adresse IP d'un utilisateur","Le nom d'un produit en vente","Le code postal d'une ville"],
+    correct: 1,
+    ok: "✅ Exact ! Une adresse IP peut identifier un utilisateur — c'est bien une donnée personnelle au sens du RGPD.",
+    ko: "❌ La bonne réponse est l'adresse IP. Elle peut identifier un utilisateur et constitue une donnée personnelle. Le CA ou le nom d'un produit ne désignent pas une personne physique."
+  },
+  {
+    q: "Un client demande la suppression de toutes ses données. Que faites-vous ?",
+    opts: ["Vous supprimez immédiatement ses données","Vous ignorez la demande car elle semble complexe","Vous transmettez la demande à votre DPO ou responsable RGPD","Vous lui répondez que c'est impossible"],
+    correct: 2,
+    ok: "✅ Parfait ! Ne gérez jamais seul une demande d'exercice de droits. Transmettez immédiatement au DPO ou responsable désigné.",
+    ko: "❌ Vous ne devez ni gérer seul la demande, ni l'ignorer. Le bon réflexe : transmettre sans délai à votre DPO ou responsable RGPD."
+  },
+  {
+    q: "Quel est le délai légal pour répondre à une demande d'exercice de droits RGPD ?",
+    opts: ["48 heures","15 jours","1 mois","6 mois"],
+    correct: 2,
+    ok: "✅ Exact ! 1 mois, prolongeable à 3 mois pour les demandes complexes, avec information préalable de la personne.",
+    ko: "❌ Le délai légal est d'1 mois. Il peut être étendu à 3 mois dans des cas complexes, mais la personne doit en être informée."
+  },
+  {
+    q: "Vous avez envoyé par erreur un fichier client à une personne externe. Que faites-vous en premier ?",
+    opts: ["Vous attendez de voir si la personne réagit","Vous signalez immédiatement à votre DPO ou responsable","Vous demandez à la personne de supprimer le fichier et considérez l'incident clos","Vous supprimez l'email envoyé de votre boîte"],
+    correct: 1,
+    ok: "✅ Excellent réflexe ! Tout incident doit être signalé immédiatement. La CNIL doit être notifiée sous 72h si la violation est avérée.",
+    ko: "❌ Tout incident doit être signalé immédiatement à votre DPO, même si les conséquences semblent limitées. La CNIL doit être notifiée sous 72h."
+  },
+  {
+    q: "Lequel de ces éléments fait partie des données sensibles au sens du RGPD ?",
+    opts: ["L'adresse postale d'un client","Le salaire mensuel d'un employé","Les convictions religieuses d'une personne","La date d'expiration d'un contrat"],
+    correct: 2,
+    ok: "✅ Exact ! Les convictions religieuses sont des données sensibles dont le traitement est en principe interdit sauf exceptions strictes.",
+    ko: "❌ Parmi ces options, seules les convictions religieuses constituent une donnée sensible. L'adresse ou le salaire sont des données ordinaires."
+  }
+];
+
+let current = 0;
+let answers = [];
+let answered = false;
+
+function go(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('s' + n).classList.add('active');
+  window.scrollTo(0, 0);
+  updateProgress(n);
+  updatePills(n);
+  if (n === 4) { current = 0; answers = []; renderQuestion(); }
+}
+
+function updateProgress(n) {
+  const pct = [0, 20, 40, 60, 85, 100][n] || 0;
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+function updatePills(n) {
+  const map = {1:'pill-1', 2:'pill-2', 3:'pill-3', 4:'pill-q', 5:'pill-q'};
+  document.querySelectorAll('.pill').forEach(p => {
+    p.classList.remove('active', 'done');
+  });
+  const lessons = ['pill-1','pill-2','pill-3','pill-q'];
+  const idx = [0,1,2,3,4].indexOf(n) - 1;
+  lessons.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (i < idx) el.classList.add('done');
+    else if (i === idx) el.classList.add('active');
+  });
+  if (map[n]) document.getElementById(map[n]).classList.add('active');
+}
+
+function toggleAcc(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = btn.classList.contains('open');
+  document.querySelectorAll('.acc-btn.open').forEach(b => {
+    b.classList.remove('open');
+    b.nextElementSibling.classList.remove('open');
+  });
+  if (!isOpen) { btn.classList.add('open'); body.classList.add('open'); }
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = questions[current];
+  const container = document.getElementById('quiz-container');
+  const labels = ['A','B','C','D'];
+  container.innerHTML = `
+    <div class="card">
+      <div class="quiz-q-num">Question ${current+1} / ${questions.length}</div>
+      <div class="quiz-question">${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((o,i) => `
+          <button class="quiz-opt" onclick="answer(${i})" id="opt-${i}">
+            <div class="opt-circle">${labels[i]}</div>
+            ${o}
+          </button>
+        `).join('')}
+      </div>
+      <div class="quiz-feedback" id="feedback"></div>
+    </div>
+    <div class="btn-row" id="next-row" style="display:none;">
+      ${current < questions.length-1
+        ? `<button class="btn btn-primary" onclick="nextQ()">Question suivante →</button>`
+        : `<button class="btn btn-amber" onclick="showScore()">Voir mon score →</button>`}
+    </div>
+  `;
+}
+
+function answer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const correct = idx === q.correct;
+  answers.push({ correct, idx, q: q.q, correctAns: q.opts[q.correct] });
+
+  document.querySelectorAll('.quiz-opt').forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.correct) btn.classList.add('correct');
+    else if (i === idx && !correct) btn.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('feedback');
+  fb.textContent = correct ? q.ok : q.ko;
+  fb.className = 'quiz-feedback show ' + (correct ? 'ok' : 'ko');
+  document.getElementById('next-row').style.display = 'flex';
+}
+
+function nextQ() {
+  current++;
+  renderQuestion();
+  window.scrollTo(0, 0);
+}
+
+function showScore() {
+  const score = answers.filter(a => a.correct).length;
+  const pct = Math.round((score / questions.length) * 100);
+  go(5);
+
+  const arc = document.getElementById('score-arc');
+  const circumference = 339.3;
+  setTimeout(() => {
+    arc.style.transition = 'stroke-dashoffset 1s ease';
+    arc.style.strokeDashoffset = circumference - (circumference * pct / 100);
+    arc.style.stroke = pct >= 80 ? '#1a6b3a' : '#c2002f';
+  }, 100);
+
+  document.getElementById('score-display').textContent = score + '/5';
+  document.getElementById('score-pct').textContent = pct + '%';
+  document.getElementById('score-display').style.color = pct >= 80 ? 'var(--vert)' : 'var(--rouge)';
+
+  const header = document.getElementById('score-header');
+  if (pct >= 80) {
+    header.innerHTML = `<div style="font-size:3rem;margin-bottom:12px;">🎉</div><h2 style="font-size:1.5rem;font-weight:900;color:var(--vert);">Félicitations !</h2>`;
+  } else {
+    header.innerHTML = `<div style="font-size:3rem;margin-bottom:12px;">📖</div><h2 style="font-size:1.5rem;font-weight:900;color:var(--rouge);">Pas tout à fait !</h2>`;
+  }
+
+  document.getElementById('score-message').textContent = pct >= 80
+    ? "Vous maîtrisez les fondamentaux du RGPD. En appliquant ces réflexes au quotidien, vous contribuez à protéger les données de vos clients et collègues."
+    : "Certaines notions méritent d'être revues. Relisez les leçons à votre rythme avant de retenter le quiz.";
+
+  const recap = document.getElementById('answers-recap');
+  recap.innerHTML = '<div style="font-size:.82rem;font-weight:800;color:var(--navy);margin-bottom:12px;text-align:left;">Détail de vos réponses :</div>' +
+    answers.map((a,i) => `
+      <div class="recap-item">
+        <span class="recap-icon">${a.correct ? '✅' : '❌'}</span>
+        <div>
+          <div class="recap-q">Q${i+1} — ${a.q}</div>
+          ${!a.correct ? `<div class="recap-a">Bonne réponse : ${a.correctAns}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+}
+
+function restartQuiz() { go(4); }
+</script>
+</body>
+</html>
