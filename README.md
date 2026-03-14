@@ -114,7 +114,7 @@ Je suis disponible pour des **missions d'intégration e-learning en full remote*
 - Export SCORM pour intégration sur votre LMS
 
 **Email :** grenier.julien5@gmail.com  
-**LinkedIn :** [linkedin.com/in/juliengrenier-9318231a6](https://www.linkedin.com/in/juliengrenier-9318231a6)  
+**LinkedIn :** [linkedin.com/in/juliengrenier-9318231a6](https://www.linkedin.com/in/julien-grenier-9318231a6)  
 **Malt :** [https://www.malt.fr/profile/juliengrenier]
 **TJM :** 250 – 300 € · Full remote · France entière
 
